@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="3dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/note_text"
-        android:layout_width="wrap_content"
+    <com.victorminerva.widget.edittext.AutofitEdittext
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="note"
+        android:id="@+id/note_title"
+        android:maxLength="50"
+        android:maxLines="2"
+        android:hint="Title"
+        android:background="@color/colorPrimary"
+        android:padding="8dp"
+        android:textSize="44sp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/colorPrimaryDark"
+        android:layout_below="@id/note_title">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/note_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:padding="8dp"
+            android:hint="Note" />
+
+    </ScrollView>
+
+
+    <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:padding="10dp" />
+        android:layout_alignParentTop="true"
+        app:fabs_menu_clickableOverlay="true">
+
+        <jahirfiquitiva.libs.fabsmenu.FABsMenu
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            app:fab_expandDirection="up"
+            app:fab_labelsPosition="left"
+            app:fab_moreButtonBackgroundColor="@color/colorAccent"
+            app:fab_moreButtonPlusIcon="@drawable/ic_save_white_24dp"
+            app:fab_moreButtonSize="normal" />
+
+    </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
 </RelativeLayout>
