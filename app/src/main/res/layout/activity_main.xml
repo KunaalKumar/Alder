@@ -7,19 +7,11 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".MainActivity">
 
-
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|center"
-        android:text="Test" />
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/notes_recycler_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scrollbars="vertical" />-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/notes_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
     <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
         android:layout_width="match_parent"
@@ -29,6 +21,7 @@
         app:fabs_menu_clickableOverlay="true">
 
         <jahirfiquitiva.libs.fabsmenu.FABsMenu
+            android:id="@+id/menu_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
@@ -37,7 +30,17 @@
             app:fab_moreButtonBackgroundColor="@color/colorAccent"
             app:fab_moreButtonPlusIcon="@drawable/ic_add_white_24dp"
             app:fab_moreButtonRippleColor="@color/colorAccentDark"
-            app:fab_moreButtonSize="normal" />
+            app:fab_moreButtonSize="normal">
+
+            <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                android:id="@+id/add_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_white_24dp"
+                app:fabSize="mini"
+                app:fab_title="Add a note" />
+
+        </jahirfiquitiva.libs.fabsmenu.FABsMenu>
 
     </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
 </RelativeLayout>

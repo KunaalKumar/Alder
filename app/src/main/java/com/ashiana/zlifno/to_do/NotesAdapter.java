@@ -46,7 +46,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        TextView note = holder.view.findViewById(R.id.note_text);
+        TextView note = holder.view.findViewById(R.id.note_content);
         note.setText(notes.get(position).getContent());
     }
 

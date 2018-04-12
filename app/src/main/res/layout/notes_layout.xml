@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,12 +12,10 @@
         android:hint="Title"
         android:maxLength="50"
         android:maxLines="2"
+        android:inputType="textCapSentences"
         android:padding="8dp"
-        android:textSize="44sp"
-        android:shadowColor="@color/text_shadow"
-        android:shadowDx="6"
-        android:shadowDy="7"
-        android:shadowRadius="5"/>
+        android:textColor="@android:color/white"
+        android:textSize="44sp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -29,11 +26,15 @@
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/note_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Note"
             android:padding="8dp"
-            android:textSize="32sp" />
+            android:textColor="@android:color/white"
+            android:textColorHighlight="@color/colorAccent"
+            android:inputType="textCapSentences"
+            android:textSize="32sp"
+            app:met_hideUnderline="true" />
 
     </ScrollView>
 
@@ -49,11 +50,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             app:fab_expandDirection="up"
-            app:fab_moreButtonRippleColor="@color/colorAccentDark"
             app:fab_labelsPosition="left"
             app:fab_moreButtonBackgroundColor="@color/colorAccent"
-            app:fab_moreButtonPlusIcon="@drawable/ic_save_white_24dp"
-            app:fab_moreButtonSize="normal" />
+            app:fab_moreButtonPlusIcon="@drawable/ic_arrow_drop_up_white_24dp"
+            app:fab_moreButtonRippleColor="@color/colorAccentDark"
+            app:fab_moreButtonSize="normal">
+
+            <jahirfiquitiva.libs.fabsmenu.TitleFAB
+                android:id="@+id/save_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_save_white_24dp"
+                app:fabSize="mini"
+                app:fab_title="Save note" />
+
+        </jahirfiquitiva.libs.fabsmenu.FABsMenu>
+
 
     </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
 </RelativeLayout>
