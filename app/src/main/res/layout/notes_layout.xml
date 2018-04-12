@@ -13,6 +13,7 @@
         android:hint="Title"
         android:maxLength="50"
         android:maxLines="2"
+        android:elevation="2dp"
         android:inputType="textCapSentences"
         android:padding="8dp"
         android:textColor="@android:color/white"
