@@ -19,8 +19,7 @@ import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 public class ListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private NoteListAdapter adapter;
     private FABsMenu menuFab;
     private TitleFAB addNote;
 
@@ -28,17 +27,14 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        ArrayList<Note> notes = new ArrayList<>();
 
         recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
-//
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new NotesAdapter(notes);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         menuFab = findViewById(R.id.menu_fab);
         addNote = findViewById(R.id.add_note);

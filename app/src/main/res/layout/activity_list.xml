@@ -11,7 +11,8 @@
         android:id="@+id/notes_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        tools:listitem="@layout/recyclerview_item" />
 
     <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
         android:layout_width="match_parent"
@@ -28,7 +29,7 @@
             app:fab_expandDirection="up"
             app:fab_labelsPosition="left"
             app:fab_moreButtonBackgroundColor="@color/colorAccent"
-            app:fab_moreButtonPlusIcon="@drawable/ic_add_white_24dp"
+            app:fab_moreButtonPlusIcon="@drawable/ic_arrow_drop_up_white_24dp"
             app:fab_moreButtonRippleColor="@color/colorAccentDark"
             app:fab_moreButtonSize="normal">
 

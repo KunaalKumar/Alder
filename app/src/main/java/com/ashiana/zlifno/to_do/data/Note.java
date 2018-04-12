@@ -12,6 +12,7 @@ import java.util.Date;
 public class Note {
 
     @PrimaryKey
+    @NonNull
     private String id;
 
     @NonNull
@@ -19,7 +20,7 @@ public class Note {
 
     private String content;
 
-    private Date timeCreated;
+    private String timeCreated;
 
     public String getId() {
         return id;
@@ -46,11 +47,11 @@ public class Note {
         this.content = content;
     }
 
-    public Date getTimeCreated() {
+    public String getTimeCreated() {
         return timeCreated;
     }
 
-    public void setTimeCreated(Date timeCreated) {
+    public void setTimeCreated(String timeCreated) {
         this.timeCreated = timeCreated;
     }
 }
