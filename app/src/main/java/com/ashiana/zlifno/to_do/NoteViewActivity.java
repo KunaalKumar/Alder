@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class NoteActivity extends AppCompatActivity {
+public class NoteViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notes_layout);
+        setContentView(R.layout.notes_view_layout);
 
         getSupportActionBar().setElevation(4);
 

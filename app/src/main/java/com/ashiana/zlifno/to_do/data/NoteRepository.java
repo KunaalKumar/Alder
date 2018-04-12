@@ -6,31 +6,32 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+// Makes an API off of the Dao
 public class NoteRepository {
     private NoteDao noteDao;
     private LiveData<List<Note>> notesList;
 
-    NoteRepository(Application application) {
+    public NoteRepository(Application application) {
         NoteRoomDatabase database = NoteRoomDatabase.getDatabase(application);
         noteDao = database.noteDao();
         notesList = noteDao.getAllNotes();
     }
 
-    LiveData<List<Note>> getNotesList() {
+    public LiveData<List<Note>> getNotesList() {
         return notesList;
     }
 
-    LiveData<List<Note>> getNotesListByTimeAsc() {
+    public LiveData<List<Note>> getNotesListByTimeAsc() {
         notesList = noteDao.getAllNotesByTimeAsc();
         return notesList;
     }
 
-    LiveData<List<Note>> getNotesListByTimeDesc() {
+    public LiveData<List<Note>> getNotesListByTimeDesc() {
         notesList = noteDao.getAllNotesByTimeDesc();
         return notesList;
     }
 
-    void insertNote(Note note) {
+    public void insertNote(Note note) {
         new insertAsyncTask(noteDao).execute(note);
     }
 
@@ -49,7 +50,7 @@ public class NoteRepository {
         }
     }
 
-    void deleteNote(Note note) {
+    public void deleteNote(Note note) {
         noteDao.deleteNote(note);
         new deleteAsyncTask(noteDao).execute(note);
     }
@@ -68,7 +69,7 @@ public class NoteRepository {
         }
     }
 
-    void updateNote(Note note) {
+    public void updateNote(Note note) {
         noteDao.updateNote(note);
         new updateAsyncTask(noteDao).execute(note);
     }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.Calendar;
 import java.util.Date;
 
+// Defines columns to add to database
 @Entity(tableName = "note_table")
 public class Note {
 

@@ -46,7 +46,7 @@ public class ListActivity extends AppCompatActivity {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                Intent i = new Intent(getApplicationContext(), NoteViewActivity.class);
                 startActivity(i);
             }
         });
