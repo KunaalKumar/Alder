@@ -11,7 +11,8 @@ public class NoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_layout);
-        getActionBar().setElevation(0);
+
+        getSupportActionBar().setElevation(4);
 
         MaterialEditText noteContent = findViewById(R.id.note_content);
         noteContent.setMetTextColor(Color.WHITE);
