@@ -15,9 +15,9 @@ public class Note {
         this.title = title;
     }
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    private String id;
+    private int id;
 
     @NonNull
     private String title;
@@ -26,11 +26,11 @@ public class Note {
 
     private String timeCreated;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

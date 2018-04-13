@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 // Makes the database using the entity
-@Database(entities = {Note.class}, version = 1)
+@Database(entities = {Note.class}, version = 2)
 public abstract class NoteRoomDatabase extends RoomDatabase {
 
     public abstract NoteDao noteDao();
