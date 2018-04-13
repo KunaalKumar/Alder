@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.to_do.data.Note;
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -20,6 +23,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         private NoteViewHolder(View itemView) {
             super(itemView);
             noteTitleView = itemView.findViewById(R.id.card_note_title);
+            noteTitleView.setInputType(0);
+
+            ((TextView) itemView.findViewById(R.id.card_time_created)).setInputType(0);
         }
     }
 

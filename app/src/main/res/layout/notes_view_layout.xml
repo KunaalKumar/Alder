@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:hint="Title"
+        android:hint="@string/hint_title"
         android:maxLength="50"
         android:maxLines="2"
         android:elevation="2dp"
@@ -30,11 +30,11 @@
             android:id="@+id/note_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Note"
+            android:hint="@string/hint_note"
             android:padding="8dp"
             android:textColor="@android:color/white"
             android:textColorHighlight="@color/colorAccent"
-            android:inputType="textCapSentences"
+            android:inputType="textCapSentences|textMultiLine"
             android:textSize="32sp"
             app:met_hideUnderline="true" />
 
@@ -50,7 +50,7 @@
         <jahirfiquitiva.libs.fabsmenu.FABsMenu
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             app:fab_expandDirection="up"
             android:elevation="8dp"
             app:fab_labelsPosition="left"

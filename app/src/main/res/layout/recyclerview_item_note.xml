@@ -14,41 +14,56 @@
         android:minHeight="150dp"
         card_view:cardCornerRadius="5dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom"
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="150dp">
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/card_note_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="50dp"
-                android:maxLines="3"
-                android:layout_margin="10dp"
-                card_view:met_hideUnderline="true"
-                android:editable="false"
-                android:minHeight="50dp"
-                android:text="Note title"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/card_note_title"
+                android:textSize="36sp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:met_hideUnderline="true" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                android:backgroundTint="@color/colorAccentLight" />
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="26dp"
+                android:background="@color/colorAccentLight"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/card_note_title"
+                card_view:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/card_note_time"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:textSize="15dp"
-                android:text="Time Created"
-                android:textColor="@color/colorAccentDark" />
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:id="@+id/card_time_created"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/card_time_created"
+                card_view:met_hideUnderline="true"
+                android:textSize="16sp"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.85"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/card_note_title" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
 

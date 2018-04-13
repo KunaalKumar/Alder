@@ -13,6 +13,8 @@ import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
+import java.util.Objects;
+
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import maes.tech.intentanim.CustomIntent;
 
@@ -29,7 +31,7 @@ public class NoteViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_view_layout);
 
-        getSupportActionBar().setElevation(4);
+        Objects.requireNonNull(getSupportActionBar()).setElevation(4);
 
         titleEditText = findViewById(R.id.note_title);
 
@@ -68,6 +70,7 @@ public class NoteViewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        setResult(RESULT_CANCELED);
         CustomIntent.customType(NoteViewActivity.this, "up-to-bottom");
     }
 }

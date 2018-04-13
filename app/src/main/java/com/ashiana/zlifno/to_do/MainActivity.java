@@ -84,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
             Note note = new Note(data.getStringExtra(NoteViewActivity.EXTRA_NOTE));
             Log.v("APPD", "Inserting note " + note.getTitle());
             listViewModel.insertNote(note);
+        } else if (resultCode == RESULT_CANCELED) {
+
         } else {
             Toast.makeText(getApplicationContext(), "Title can't be empty", Toast.LENGTH_LONG).show();
+
         }
     }
 }
