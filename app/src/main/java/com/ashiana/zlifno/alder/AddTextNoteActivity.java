@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.ashiana.zlifno.to_do.R;
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import com.rengwuxian.materialedittext.MaterialEditText;

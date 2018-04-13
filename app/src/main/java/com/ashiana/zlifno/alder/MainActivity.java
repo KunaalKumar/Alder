@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
-import com.ashiana.zlifno.to_do.R;
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 
 import java.util.List;

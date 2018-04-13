@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashiana.zlifno.to_do.R;
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
