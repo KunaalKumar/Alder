@@ -9,21 +9,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ashiana.zlifno.to_do.data.Note;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import maes.tech.intentanim.CustomIntent;
 
-public class NoteViewActivity extends AppCompatActivity {
+public class AddTextNoteActivity extends AppCompatActivity {
 
-    public static final String EXTRA_NOTE = "com.ashiana.zlifno.to_do.NOTE";
+    public static final String SAVE_NOTE_EXTRA = "com.ashiana.zlifno.to_do.SAVE_NOTE";
 
     private AutofitEdittext titleEditText;
-    private MaterialEditText noteEditText;
+    private MaterialEditText noteContentEditText;
     private TitleFAB saveNoteFab;
 
     @Override
@@ -35,8 +38,8 @@ public class NoteViewActivity extends AppCompatActivity {
 
         titleEditText = findViewById(R.id.note_title);
 
-        noteEditText = findViewById(R.id.note_content);
-        noteEditText.setMetTextColor(Color.WHITE);
+        noteContentEditText = findViewById(R.id.note_content);
+        noteContentEditText.setMetTextColor(Color.WHITE);
 
         saveNoteFab = findViewById(R.id.save_note);
 
@@ -44,15 +47,20 @@ public class NoteViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.v("APPD", "Clicked Save");
-                Intent replyIntent = new Intent();
+                Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(titleEditText.getText())) {
                     Log.v("APPD", "Title is empty");
-                    setResult(RESULT_CANCELED, replyIntent);
+                    setResult(RESULT_CANCELED, saveNoteIntent);
                 } else {
                     String noteTitle = titleEditText.getText().toString();
-                    Log.v("APPD", "Title isn't empty!");
-                    replyIntent.putExtra(EXTRA_NOTE, noteTitle);
-                    setResult(RESULT_OK, replyIntent);
+                    String noteContent = noteContentEditText.getText().toString();
+
+                    SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
+
+                    Note toSend = new Note(noteTitle, noteContent,"Time created: " +  dateFromat.format(new Date()));
+
+                    saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
+                    setResult(RESULT_OK, saveNoteIntent);
                     StyleableToast.makeText(getApplicationContext(),
                             "Note Made!",
                             Toast.LENGTH_LONG,
@@ -60,17 +68,17 @@ public class NoteViewActivity extends AppCompatActivity {
                             .show();
                 }
                 finish();
-                CustomIntent.customType(NoteViewActivity.this, "up-to-bottom");
+                CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
             }
         });
 
-        CustomIntent.customType(NoteViewActivity.this, "bottom-to-up");
+        CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
-        CustomIntent.customType(NoteViewActivity.this, "up-to-bottom");
+        CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
     }
 }

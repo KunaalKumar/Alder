@@ -1,25 +1,19 @@
 package com.ashiana.zlifno.to_do;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.to_do.data.Note;
 import com.ashiana.zlifno.to_do.view_model.ListViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
@@ -33,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TitleFAB addNote;
     private ListViewModel listViewModel;
+    private FABsMenu fabsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
+
+        fabsMenu = findViewById(R.id.menu_fab);
+        fabsMenu.attachToRecyclerView(recyclerView);
 
         final NoteListAdapter adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), NoteViewActivity.class);
+                Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);
                 Log.v("APPD", "Started Add Note Activity");
                 startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
             }
@@ -79,16 +77,17 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        fabsMenu.collapse();
+
         Log.v("APPD", "Got intent ! " + requestCode);
+
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Note note = new Note(data.getStringExtra(NoteViewActivity.EXTRA_NOTE));
+            Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
             Log.v("APPD", "Inserting note " + note.getTitle());
             listViewModel.insertNote(note);
         } else if (resultCode == RESULT_CANCELED) {
-
         } else {
             Toast.makeText(getApplicationContext(), "Title can't be empty", Toast.LENGTH_LONG).show();
-
         }
     }
 }

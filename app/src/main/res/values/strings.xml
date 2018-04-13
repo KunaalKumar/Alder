@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">To-Do</string>
+    <string name="app_name">Alder</string>
     <string name="card_note_title">Note Title</string>
     <string name="card_time_created">Time Created</string>
     <string name="hint_title">Title</string>

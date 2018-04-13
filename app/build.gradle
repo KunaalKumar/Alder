@@ -63,4 +63,8 @@ dependencies {
 
     // https://github.com/hajiyevelnur92/intentanimation
     implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
+
+    // https://github.com/opacapp/multiline-collapsingtoolbar
+    implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
+
 }

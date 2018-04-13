@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NoteViewActivity"
+            android:name=".AddTextNoteActivity"
             android:parentActivityName=".MainActivity">
 
         </activity>

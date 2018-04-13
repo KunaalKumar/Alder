@@ -17,7 +17,7 @@ public class ListViewModel extends AndroidViewModel {
     private NoteRepository repository;
     private LiveData<List<Note>> notesList;
 
-    public ListViewModel(@NonNull Application application) {
+    public ListViewModel(Application application) {
         super(application);
         repository = new NoteRepository(application);
         notesList = repository.getNotesList();
@@ -28,17 +28,19 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void insertNote(Note note) {
+
         Log.v("APPD", "ListViewModel : Sending \"" + note.getTitle() + "\" to repository");
+
         repository.insertNote(note);
     }
 
-    public void deleteNote(Note note) {
-        repository.deleteNote(note);
-    }
-
-    public void updateNote(Note note) {
-        repository.updateNote(note);
-    }
+//    public void deleteNote(Note note) {
+//        repository.deleteNote(note);
+//    }
+//
+//    public void updateNote(Note note) {
+//        repository.updateNote(note);
+//    }
 
 }
 

@@ -18,14 +18,16 @@ import java.util.List;
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
-        private final TextView noteTitleView;
+        private final MaterialEditText noteTitleView;
+        private final MaterialEditText noteTimeCreatedView;
 
         private NoteViewHolder(View itemView) {
             super(itemView);
             noteTitleView = itemView.findViewById(R.id.card_note_title);
             noteTitleView.setInputType(0);
 
-            ((TextView) itemView.findViewById(R.id.card_time_created)).setInputType(0);
+            noteTimeCreatedView = itemView.findViewById(R.id.card_time_created);
+            noteTimeCreatedView.setInputType(0);
         }
     }
 
@@ -46,6 +48,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note current = mNotes.get(position);
         holder.noteTitleView.setText(current.getTitle());
+        holder.noteTimeCreatedView.setText(current.getTimeCreated());
     }
 
     void setNotes(List<Note> words) {
