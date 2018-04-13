@@ -7,11 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
+import maes.tech.intentanim.CustomIntent;
 
 public class NoteViewActivity extends AppCompatActivity {
 
@@ -48,9 +51,23 @@ public class NoteViewActivity extends AppCompatActivity {
                     Log.v("APPD", "Title isn't empty!");
                     replyIntent.putExtra(EXTRA_NOTE, noteTitle);
                     setResult(RESULT_OK, replyIntent);
+                    StyleableToast.makeText(getApplicationContext(),
+                            "Note Made!",
+                            Toast.LENGTH_LONG,
+                            R.style.note_made_toast)
+                            .show();
                 }
                 finish();
+                CustomIntent.customType(NoteViewActivity.this, "up-to-bottom");
             }
         });
+
+        CustomIntent.customType(NoteViewActivity.this, "bottom-to-up");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        CustomIntent.customType(NoteViewActivity.this, "up-to-bottom");
     }
 }

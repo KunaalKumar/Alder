@@ -19,7 +19,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
         private NoteViewHolder(View itemView) {
             super(itemView);
-            noteTitleView = itemView.findViewById(R.id.list_note_title);
+            noteTitleView = itemView.findViewById(R.id.card_note_title);
         }
     }
 
@@ -32,7 +32,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recyclerview_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.recyclerview_item_note, parent, false);
         return new NoteViewHolder(itemView);
     }
 

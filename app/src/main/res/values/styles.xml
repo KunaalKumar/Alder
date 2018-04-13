@@ -17,4 +17,12 @@
         <item name="android:paddingLeft">8dp</item>
     </style>
 
+    <style name="note_made_toast">
+        <item name="textBold">true</item>
+        <item name="textColor">#fff</item>
+        <item name="textSize">14sp</item>
+        <item name="colorBackground">@color/colorAccent</item>
+        <item name="solidBackground">true</item>
+    </style>
+
 </resources>

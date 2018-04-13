@@ -24,6 +24,7 @@ import java.util.List;
 
 import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
+import maes.tech.intentanim.CustomIntent;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
             }
         });
+
+        CustomIntent.customType(MainActivity.this, "rotateout-to-rotatein");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
