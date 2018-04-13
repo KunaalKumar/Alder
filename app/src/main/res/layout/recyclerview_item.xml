@@ -8,5 +8,6 @@
         style="@style/note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark" />
+        android:text="Hello"
+        android:background="@android:color/holo_orange_light" />
 </LinearLayout>

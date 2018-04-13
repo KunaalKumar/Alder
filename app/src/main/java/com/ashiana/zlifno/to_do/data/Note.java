@@ -11,6 +11,10 @@ import java.util.Date;
 @Entity(tableName = "note_table")
 public class Note {
 
+    public Note(@NonNull String title) {
+        this.title = title;
+    }
+
     @PrimaryKey
     @NonNull
     private String id;

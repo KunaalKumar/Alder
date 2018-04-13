@@ -15,8 +15,12 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 // Adds functionality for the database
 @Dao
 public interface NoteDao {
+
     @Insert(onConflict = IGNORE)
     void insertNote(Note note);
+
+    @Query("DELETE FROM note_table")
+    void deleteAll();
 
     @Update(onConflict = REPLACE)
     void updateNote(Note note);
@@ -26,10 +30,4 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note_table")
     LiveData<List<Note>> getAllNotes();
-
-    @Query("SELECT * FROM note_table ORDER BY timeCreated ASC")
-    LiveData<List<Note>> getAllNotesByTimeAsc();
-
-    @Query("SELECT * FROM note_table ORDER BY timeCreated DESC")
-    LiveData<List<Note>> getAllNotesByTimeDesc();
 }

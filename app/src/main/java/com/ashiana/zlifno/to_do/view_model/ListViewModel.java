@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ashiana.zlifno.to_do.data.Note;
 import com.ashiana.zlifno.to_do.data.NoteRepository;
@@ -26,17 +27,8 @@ public class ListViewModel extends AndroidViewModel {
         return notesList;
     }
 
-    public LiveData<List<Note>> getNotesListByTimeAsc() {
-        notesList = repository.getNotesListByTimeAsc();
-        return notesList;
-    }
-
-    public LiveData<List<Note>> getNotesListByTimeDesc() {
-        notesList = repository.getNotesListByTimeDesc();
-        return notesList;
-    }
-
     public void insertNote(Note note) {
+        Log.v("APPD", "ListViewModel : Sending \"" + note.getTitle() + "\" to repository");
         repository.insertNote(note);
     }
 
@@ -49,3 +41,5 @@ public class ListViewModel extends AndroidViewModel {
     }
 
 }
+
+

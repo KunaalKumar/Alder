@@ -2,6 +2,7 @@ package com.ashiana.zlifno.to_do;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,49 +12,49 @@ import com.ashiana.zlifno.to_do.data.Note;
 
 import java.util.List;
 
-public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder> {
+public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
 
-    class NoteListViewHolder extends RecyclerView.ViewHolder {
-        private final TextView noteTitle;
+    class NoteViewHolder extends RecyclerView.ViewHolder {
+        private final TextView noteTitleView;
 
-        private NoteListViewHolder(View itemView) {
+        private NoteViewHolder(View itemView) {
             super(itemView);
-            noteTitle = itemView.findViewById(R.id.list_note_title);
+            noteTitleView = itemView.findViewById(R.id.list_note_title);
         }
     }
 
-    private final LayoutInflater inflater;
-    private List<Note> notes;
+    private final LayoutInflater mInflater;
+    private List<Note> mNotes; // Cached copy of notes
 
-    public NoteListAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
+    NoteListAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public NoteListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_item, parent, false);
-        return new NoteListViewHolder(itemView);
+    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.recyclerview_item, parent, false);
+        return new NoteViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(NoteListViewHolder holder, int position) {
-        if (notes != null) {
-            Note current = notes.get(position);
-            holder.noteTitle.setText(current.getTitle());
-        } else {
-            // Covers the case of data not being ready yet.
-            holder.noteTitle.setText("No Note");
-        }
+    public void onBindViewHolder(NoteViewHolder holder, int position) {
+        Note current = mNotes.get(position);
+        holder.noteTitleView.setText(current.getTitle());
     }
 
-    void setNotes(List<Note> notes) {
-        this.notes = notes;
+    void setNotes(List<Note> words) {
+        mNotes = words;
+        Log.v("APPD", "Adapter: Item count is " + getItemCount());
         notifyDataSetChanged();
     }
 
+    // getItemCount() is called many times, and when it is first called,
+    // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        return notes != null ? notes.size() : 0;
+        if (mNotes != null)
+            return mNotes.size();
+        else return 0;
     }
 }
 

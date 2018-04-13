@@ -3,11 +3,13 @@ package com.ashiana.zlifno.to_do.data;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 
 // Makes an API off of the Dao
 public class NoteRepository {
+
     private NoteDao noteDao;
     private LiveData<List<Note>> notesList;
 
@@ -21,15 +23,6 @@ public class NoteRepository {
         return notesList;
     }
 
-    public LiveData<List<Note>> getNotesListByTimeAsc() {
-        notesList = noteDao.getAllNotesByTimeAsc();
-        return notesList;
-    }
-
-    public LiveData<List<Note>> getNotesListByTimeDesc() {
-        notesList = noteDao.getAllNotesByTimeDesc();
-        return notesList;
-    }
 
     public void insertNote(Note note) {
         new insertAsyncTask(noteDao).execute(note);
@@ -45,6 +38,7 @@ public class NoteRepository {
 
         @Override
         protected Void doInBackground(final Note... params) {
+            Log.v("APPD", "REPO: Started adding note in background");
             asyncTaskNoteDao.insertNote(params[0]);
             return null;
         }
