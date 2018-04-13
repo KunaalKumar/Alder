@@ -24,7 +24,7 @@
             android:id="@+id/menu_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             app:fab_expandDirection="up"
             app:fab_labelsPosition="left"
             app:fab_moreButtonBackgroundColor="@color/colorAccent"
