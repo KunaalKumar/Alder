@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -46,24 +47,54 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                Toast.makeText(getApplicationContext(), "Moved Note", Toast.LENGTH_SHORT).show();
+                adapter.moveNote(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                Toast.makeText(getApplicationContext(), "Deleted Note", Toast.LENGTH_SHORT).show();
+                listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
+                adapter.deleteNote(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        listViewModel = ViewModelProviders.of(this).
+
+                get(ListViewModel.class);
 
 //         Observer for Live Data
-        listViewModel.getNotesList().observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
-                Log.v("APPD", "Main: Item count is " + notes.size());
-                adapter.setNotes(notes);
-                for (int i = 0; i < notes.size(); i++) {
-                    Log.v("APPD", notes.get(i).getTitle());
-                }
-                Log.v("APPD", "Updated notes list");
-            }
-        });
+        listViewModel.getNotesList().
 
-        addNote = findViewById(R.id.add_note);
+                observe(this, new Observer<List<Note>>() {
+                    @Override
+                    public void onChanged(List<Note> notes) {
+                        Log.v("APPD", "Main: Item count is " + notes.size());
+                        adapter.setNotes(notes);
+                        for (int i = 0; i < notes.size(); i++) {
+                            Log.v("APPD", notes.get(i).getTitle());
+                        }
+                        Log.v("APPD", "Updated notes list");
+                    }
+                });
 
-        addNote.setOnClickListener(new View.OnClickListener() {
+        addNote =
+
+                findViewById(R.id.add_note);
+
+        addNote.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -35,33 +37,34 @@
                 card_view:met_hideUnderline="true" />
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="26dp"
-                android:background="@color/colorAccentLight"
-                card_view:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                card_view:layout_constraintBottom_toTopOf="@+id/card_time_created"
+                card_view:layout_constraintDimensionRatio="w,1:1"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/card_note_title"
-                card_view:layout_constraintVertical_bias="0.0" />
+                card_view:layout_constraintVertical_bias="0.8" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/card_time_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:id="@+id/card_time_created"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/card_time_created"
-                card_view:met_hideUnderline="true"
                 android:textSize="16sp"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.85"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/card_note_title" />
+                card_view:layout_constraintTop_toBottomOf="@+id/card_note_title"
+                card_view:met_hideUnderline="true" />
 
         </android.support.constraint.ConstraintLayout>
 

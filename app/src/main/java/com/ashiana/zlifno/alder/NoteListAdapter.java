@@ -1,5 +1,6 @@
 package com.ashiana.zlifno.alder;
 
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -7,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -51,8 +51,23 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
     void setNotes(List<Note> words) {
         mNotes = words;
-        Log.v("APPD", "Adapter: Item count is " + getItemCount());
+        Log.v("Alder", "Adapter: Item count is " + getItemCount());
         notifyDataSetChanged();
+    }
+
+    void moveNote(int oldPos, int newPos) {
+        Note note = mNotes.get(oldPos);
+        mNotes.remove(oldPos);
+        mNotes.add(newPos, note);
+        notifyItemMoved(oldPos, newPos);
+    }
+
+    void deleteNote(int position) {
+        mNotes.remove(position);
+    }
+
+    Note getNote(int position) {
+        return mNotes.get(position);
     }
 
     // getItemCount() is called many times, and when it is first called,

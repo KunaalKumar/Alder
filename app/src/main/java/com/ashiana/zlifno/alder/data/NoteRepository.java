@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
+import java.util.Objects;
 
 // Makes an API off of the Dao
 public class NoteRepository {
@@ -45,7 +46,7 @@ public class NoteRepository {
     }
 
     public void deleteNote(Note note) {
-        noteDao.deleteNote(note);
+
         new deleteAsyncTask(noteDao).execute(note);
     }
 
