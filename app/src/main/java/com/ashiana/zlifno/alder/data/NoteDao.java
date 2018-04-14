@@ -28,6 +28,13 @@ public interface NoteDao {
     @Delete()
     void deleteNote(Note note);
 
-    @Query("SELECT * FROM note_table")
+    @Query("DELETE FROM note_table WHERE position = (:position)")
+    void deleteNoteByPosition(int position);
+
+    @Query("DELETE FROM note_table WHERE id = (:id)")
+    void deleteNoteById(int id);
+
+    @Query("SELECT * FROM note_table ORDER BY position ASC")
     LiveData<List<Note>> getAllNotes();
+
 }

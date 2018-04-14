@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.ashiana.zlifno.alder.data.Note;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
@@ -55,19 +56,32 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         notifyDataSetChanged();
     }
 
-    void moveNote(int oldPos, int newPos) {
-        Note note = mNotes.get(oldPos);
-        mNotes.remove(oldPos);
-        mNotes.add(newPos, note);
-        notifyItemMoved(oldPos, newPos);
-    }
-
     void deleteNote(int position) {
         mNotes.remove(position);
     }
 
     Note getNote(int position) {
         return mNotes.get(position);
+    }
+
+    List<Note> getToBeMoved(int oldPos, int newPos) {
+        List<Note> movedList = new ArrayList<>();
+
+        // Moving up
+        if (oldPos > newPos) {
+            for (int i = newPos; i <= oldPos; i++) {
+                movedList.add(mNotes.get(i));
+            }
+            return movedList;
+        }
+
+        // Moving down
+        else {
+            for (int i = oldPos; i <= newPos; i++) {
+                movedList.add(mNotes.get(i));
+            }
+            return movedList;
+        }
     }
 
     // getItemCount() is called many times, and when it is first called,

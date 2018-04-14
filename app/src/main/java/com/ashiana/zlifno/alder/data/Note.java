@@ -30,6 +30,16 @@ public class Note implements Serializable {
 
     private String timeCreated;
 
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     public int getId() {
         return id;
     }

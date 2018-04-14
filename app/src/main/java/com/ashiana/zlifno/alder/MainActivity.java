@@ -47,14 +47,47 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
+            int dragFrom = -1;
+            int dragTo = -1;
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                Toast.makeText(getApplicationContext(), "Moved Note", Toast.LENGTH_SHORT).show();
-                adapter.moveNote(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+
+
+                if (dragFrom == -1) {
+                    dragFrom = fromPosition;
+                }
+                dragTo = toPosition;
+
+                adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+
                 return true;
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+                Toast.makeText(getApplicationContext(), "Moved Note", Toast.LENGTH_SHORT).show();
+
+                if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+
+                    // Moving up
+                    if (dragFrom > dragTo) {
+                        listViewModel.moveNoteUp(adapter.getToBeMoved(dragFrom, dragTo));
+                    }
+
+                    // Moving down
+                    else {
+                        listViewModel.moveNoteDown(adapter.getToBeMoved(dragFrom, dragTo));
+                    }
+                }
+                dragTo = dragFrom = -1;
             }
 
             @Override

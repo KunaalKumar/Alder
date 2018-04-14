@@ -43,6 +43,20 @@ public class ListViewModel extends AndroidViewModel {
         repository.updateNote(note);
     }
 
+    public void moveNoteUp(List<Note> notes) {
+
+        Log.v("Alder", "ListViewModel : Moving note to new position");
+
+        repository.moveNoteUp(notes);
+    }
+
+    public void moveNoteDown(List<Note> notes) {
+
+        Log.v("Alder", "ListViewModel : Moving note to new position");
+
+        repository.moveNoteDown(notes);
+    }
+
 }
 
 

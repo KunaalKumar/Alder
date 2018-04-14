@@ -3,7 +3,10 @@ package com.ashiana.zlifno.alder.data;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +29,7 @@ public class NoteRepository {
 
 
     public void insertNote(Note note) {
+        note.setPosition(notesList.getValue().size() + 1);
         new insertAsyncTask(noteDao).execute(note);
     }
 
@@ -65,7 +69,6 @@ public class NoteRepository {
     }
 
     public void updateNote(Note note) {
-        noteDao.updateNote(note);
         new updateAsyncTask(noteDao).execute(note);
     }
 
@@ -83,4 +86,78 @@ public class NoteRepository {
         }
     }
 
+    // Note moved up
+    public void moveNoteUp(List<Note> notes) {
+        new moveNoteUpAsyncTask(noteDao, notes).execute();
+    }
+
+    private static class moveNoteUpAsyncTask extends AsyncTask<Void, Void, Void> {
+        private NoteDao noteDao;
+        private List<Note> notes;
+
+        moveNoteUpAsyncTask(NoteDao noteDao, List<Note> notes) {
+            this.noteDao = noteDao;
+            this.notes = notes;
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Note tempNote = notes.get(notes.size() - 1);
+            noteDao.deleteNoteById(tempNote.getId());
+            Note nextNote;
+            int notePosition = notes.get(0).getPosition();
+
+            for (int i = 0; i < notes.size(); i++) {
+
+                nextNote = notes.get(i);
+                noteDao.deleteNoteByPosition(notePosition);
+
+                tempNote.setPosition(notePosition);
+                noteDao.insertNote(tempNote);
+
+                tempNote = nextNote;
+                notePosition++;
+
+            }
+            return null;
+        }
+    }
+
+    // Note moved down
+    public void moveNoteDown(List<Note> notes) {
+        new moveNoteDownAsyncTask(noteDao, notes).execute();
+    }
+
+    private static class moveNoteDownAsyncTask extends AsyncTask<Void, Void, Void> {
+        private NoteDao noteDao;
+        private List<Note> notes;
+
+        moveNoteDownAsyncTask(NoteDao noteDao, List<Note> notes) {
+            this.noteDao = noteDao;
+            this.notes = notes;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Note tempNote = notes.get(0);
+            noteDao.deleteNoteById(tempNote.getId());
+            Note nextNote;
+            int notePosition = notes.get(notes.size() - 1).getPosition();
+
+            for (int i = notes.size() - 1; i >= 0; i--) {
+
+                nextNote = notes.get(i);
+                noteDao.deleteNoteByPosition(notePosition);
+
+                tempNote.setPosition(notePosition);
+                noteDao.insertNote(tempNote);
+
+                tempNote = nextNote;
+                notePosition--;
+
+            }
+            return null;
+        }
+    }
 }
