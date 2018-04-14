@@ -3,16 +3,11 @@ package com.ashiana.zlifno.alder.data;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 
 import java.util.List;
-import java.util.Objects;
 
 // Makes an API off of the Dao
 public class NoteRepository {
@@ -46,7 +41,7 @@ public class NoteRepository {
 
         @Override
         protected Void doInBackground(final Note... params) {
-            Log.v("APPD", "REPO: Started adding note in background");
+            Log.v("Alder", "REPO: Started adding note in background");
             asyncTaskNoteDao.insertNote(params[0]);
             return null;
         }
@@ -54,38 +49,34 @@ public class NoteRepository {
 
     public void deleteNote(Note note) {
 
-        new deleteAsyncTask(noteDao).execute(note);
+        new deleteAsyncTask(noteDao, notesList.getValue()).execute(note);
+
     }
 
     private static class deleteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteDao asyncTaskNoteDao;
+        private List<Note> notes;
 
-        deleteAsyncTask(NoteDao dao) {
+        deleteAsyncTask(NoteDao dao, List<Note> notes) {
             asyncTaskNoteDao = dao;
+            this.notes = notes;
         }
 
         @Override
         protected Void doInBackground(final Note... params) {
             asyncTaskNoteDao.deleteNote(params[0]);
+            Note next = asyncTaskNoteDao.getNoteByPos(params[0].getPosition() + 1);
+            if (next != null) {
+                moveNotePosUp(next.getPosition());
+            }
             return null;
         }
-    }
 
-    public void updateNote(Note note) {
-        new updateAsyncTask(noteDao).execute(note);
-    }
-
-    private static class updateAsyncTask extends AsyncTask<Note, Void, Void> {
-        private NoteDao asyncTaskNoteDao;
-
-        updateAsyncTask(NoteDao dao) {
-            asyncTaskNoteDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Note... params) {
-            asyncTaskNoteDao.updateNote(params[0]);
-            return null;
+        private void moveNotePosUp(int firstItemPos) {
+            for (int i = firstItemPos; i < notes.size(); i++) {
+                Note current = asyncTaskNoteDao.getNoteByPos(i);
+                current.setPosition(i - 1);
+            }
         }
     }
 

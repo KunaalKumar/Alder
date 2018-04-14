@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 int fromPosition = viewHolder.getAdapterPosition();
                 int toPosition = target.getAdapterPosition();
 
+                Log.d("Alder", "Dragged");
 
                 if (dragFrom == -1) {
                     dragFrom = fromPosition;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
 
+            // Called on drop
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
