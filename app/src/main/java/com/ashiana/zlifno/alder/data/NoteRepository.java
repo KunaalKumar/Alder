@@ -111,6 +111,7 @@ public class NoteRepository {
                 for (int i = fromPosition; i < toPosition; i++) {
                     swap(i, i + 1);
                 }
+
                 // Moved up
             } else {
                 for (int i = fromPosition; i > toPosition; i--) {
