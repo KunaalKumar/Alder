@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
@@ -35,8 +36,6 @@ public class AddTextNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_view_layout);
 
-        Objects.requireNonNull(getSupportActionBar()).setElevation(4);
-
         titleEditText = findViewById(R.id.note_title);
 
         noteContentEditText = findViewById(R.id.note_content);
@@ -58,7 +57,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
                     SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
 
-                    Note toSend = new Note(noteTitle, noteContent,"Time created: " +  dateFromat.format(new Date()));
+                    Note toSend = new Note(noteTitle, noteContent, "Time created: " + dateFromat.format(new Date()));
 
                     saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
                     setResult(RESULT_OK, saveNoteIntent);

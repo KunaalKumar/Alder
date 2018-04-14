@@ -7,11 +7,39 @@
     android:background="@android:color/white"
     tools:context="com.ashiana.zlifno.alder.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="26sp" />
+
+    </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notes_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/my_toolbar"
         tools:listitem="@layout/recyclerview_item_note" />
+
+    <com.turingtechnologies.materialscrollbar.DragScrollBar
+    android:id="@+id/dragScrollBar"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:msb_lightOnTouch="true"
+    android:layout_below="@id/my_toolbar"
+    android:layout_alignEnd="@id/notes_recycler_view"
+    app:msb_recyclerView="@id/notes_recycler_view" />
 
     <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
         android:layout_width="match_parent"
