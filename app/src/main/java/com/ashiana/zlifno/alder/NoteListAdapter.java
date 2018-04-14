@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashiana.zlifno.alder.data.Note;
+import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
@@ -57,31 +58,11 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     }
 
     void deleteNote(int position) {
-        mNotes.remove(position);
+        notifyItemRemoved(position);
     }
 
     Note getNote(int position) {
         return mNotes.get(position);
-    }
-
-    List<Note> getToBeMoved(int oldPos, int newPos) {
-        List<Note> movedList = new ArrayList<>();
-
-        // Moving up
-        if (oldPos > newPos) {
-            for (int i = newPos; i <= oldPos; i++) {
-                movedList.add(mNotes.get(i));
-            }
-            return movedList;
-        }
-
-        // Moving down
-        else {
-            for (int i = oldPos; i <= newPos; i++) {
-                movedList.add(mNotes.get(i));
-            }
-            return movedList;
-        }
     }
 
     // getItemCount() is called many times, and when it is first called,

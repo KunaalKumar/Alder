@@ -4,9 +4,12 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.ashiana.zlifno.alder.view_model.ListViewModel;
 
 import java.util.List;
 import java.util.Objects;
@@ -87,77 +90,55 @@ public class NoteRepository {
     }
 
     // Note moved up
-    public void moveNoteUp(List<Note> notes) {
-        new moveNoteUpAsyncTask(noteDao, notes).execute();
+    public void moveNote(Note holdingNote, Note destNote, ListViewModel model) {
+        synchronized (this) {
+            new moveNoteAsyncTask(noteDao, holdingNote, destNote, model).execute();
+        }
     }
 
-    private static class moveNoteUpAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class moveNoteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NoteDao noteDao;
-        private List<Note> notes;
+        private Note holdingNote;
+        private Note destNote;
+        private ListViewModel model;
 
-        moveNoteUpAsyncTask(NoteDao noteDao, List<Note> notes) {
+        moveNoteAsyncTask(NoteDao noteDao, Note holdingNote, Note destNote, ListViewModel model) {
             this.noteDao = noteDao;
-            this.notes = notes;
-
+            this.holdingNote = holdingNote;
+            this.destNote = destNote;
+            this.model = model;
+            model.inProgress = true;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Note tempNote = notes.get(notes.size() - 1);
-            noteDao.deleteNoteById(tempNote.getId());
-            Note nextNote;
-            int notePosition = notes.get(0).getPosition();
 
-            for (int i = 0; i < notes.size(); i++) {
+            int fromPosition = holdingNote.getPosition();
+            int toPosition = destNote.getPosition();
 
-                nextNote = notes.get(i);
-                noteDao.deleteNoteByPosition(notePosition);
-
-                tempNote.setPosition(notePosition);
-                noteDao.insertNote(tempNote);
-
-                tempNote = nextNote;
-                notePosition++;
-
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    swap(i, i + 1);
+                }
+                // Moved up
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    swap(i, i - 1);
+                }
             }
+            model.inProgress = false;
             return null;
         }
-    }
 
-    // Note moved down
-    public void moveNoteDown(List<Note> notes) {
-        new moveNoteDownAsyncTask(noteDao, notes).execute();
-    }
+        private void swap(int firstPos, int secondPos) {
+            Note firstNote = noteDao.getNoteByPos(firstPos);
+            Note secondNote = noteDao.getNoteByPos(secondPos);
 
-    private static class moveNoteDownAsyncTask extends AsyncTask<Void, Void, Void> {
-        private NoteDao noteDao;
-        private List<Note> notes;
+            firstNote.setPosition(secondPos);
+            secondNote.setPosition(firstPos);
 
-        moveNoteDownAsyncTask(NoteDao noteDao, List<Note> notes) {
-            this.noteDao = noteDao;
-            this.notes = notes;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            Note tempNote = notes.get(0);
-            noteDao.deleteNoteById(tempNote.getId());
-            Note nextNote;
-            int notePosition = notes.get(notes.size() - 1).getPosition();
-
-            for (int i = notes.size() - 1; i >= 0; i--) {
-
-                nextNote = notes.get(i);
-                noteDao.deleteNoteByPosition(notePosition);
-
-                tempNote.setPosition(notePosition);
-                noteDao.insertNote(tempNote);
-
-                tempNote = nextNote;
-                notePosition--;
-
-            }
-            return null;
+            noteDao.updateNote(firstNote);
+            noteDao.updateNote(secondNote);
         }
     }
 }

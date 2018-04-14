@@ -42,10 +42,33 @@ public class MainActivity extends AppCompatActivity {
         fabsMenu = findViewById(R.id.menu_fab);
         fabsMenu.attachToRecyclerView(recyclerView);
 
+
         final NoteListAdapter adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
+
+//         Observer for Live Data
+        listViewModel.getNotesList().
+
+                observe(this, new Observer<List<Note>>() {
+                    @Override
+                    public void onChanged(List<Note> notes) {
+                        Log.v("APPD", "Main: Item count is " + notes.size());
+
+                        if (listViewModel.inProgress) {
+                            return;
+                        }
+
+                        adapter.setNotes(notes);
+                        for (int i = 0; i < notes.size(); i++) {
+                            Log.v("APPD", notes.get(i).getTitle());
+                        }
+                        Log.v("APPD", "Updated notes list");
+                    }
+                });
 
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP,
@@ -73,19 +96,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 super.clearView(recyclerView, viewHolder);
-                Toast.makeText(getApplicationContext(), "Moved Note", Toast.LENGTH_SHORT).show();
 
                 if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
-
-                    // Moving up
-                    if (dragFrom > dragTo) {
-                        listViewModel.moveNoteUp(adapter.getToBeMoved(dragFrom, dragTo));
-                    }
-
-                    // Moving down
-                    else {
-                        listViewModel.moveNoteDown(adapter.getToBeMoved(dragFrom, dragTo));
-                    }
+                    listViewModel.moveNote(adapter.getNote(dragFrom), adapter.getNote(dragTo), adapter);
+                    adapter.notifyItemMoved(dragFrom, dragTo);
                 }
                 dragTo = dragFrom = -1;
             }
@@ -95,35 +109,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Deleted Note", Toast.LENGTH_SHORT).show();
                 listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                 adapter.deleteNote(viewHolder.getAdapterPosition());
-                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        listViewModel = ViewModelProviders.of(this).
 
-                get(ListViewModel.class);
-
-//         Observer for Live Data
-        listViewModel.getNotesList().
-
-                observe(this, new Observer<List<Note>>() {
-                    @Override
-                    public void onChanged(List<Note> notes) {
-                        Log.v("APPD", "Main: Item count is " + notes.size());
-                        adapter.setNotes(notes);
-                        for (int i = 0; i < notes.size(); i++) {
-                            Log.v("APPD", notes.get(i).getTitle());
-                        }
-                        Log.v("APPD", "Updated notes list");
-                    }
-                });
-
-        addNote =
-
-                findViewById(R.id.add_note);
+        addNote = findViewById(R.id.add_note);
 
         addNote.setOnClickListener(new View.OnClickListener()
 
