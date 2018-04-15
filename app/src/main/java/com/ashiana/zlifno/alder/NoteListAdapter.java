@@ -4,15 +4,14 @@ import android.app.LauncherActivity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashiana.zlifno.alder.data.Note;
-import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {

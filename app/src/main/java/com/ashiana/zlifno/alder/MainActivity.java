@@ -5,22 +5,23 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.turingtechnologies.materialscrollbar.DragScrollBar;
+import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
     private ListViewModel listViewModel;
     private SpeedDialView speedDialView;
+    private RecyclerView recyclerView;
+    private MaterialScrollBar scrollBar;
+    private NoteListAdapter adapter;
+    private int listSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +47,14 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_list);
 
-        final RecyclerView recyclerView = findViewById(R.id.notes_recycler_view);
+        recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        final NoteListAdapter adapter = new NoteListAdapter(this);
+        scrollBar = findViewById(R.id.dragScrollBar);
+        scrollBar.setBarColour(getResources().getColor(R.color.colorAccent));
+
+
+        adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -59,7 +68,16 @@ public class MainActivity extends AppCompatActivity {
                 observe(this, new Observer<List<Note>>() {
                     @Override
                     public void onChanged(List<Note> notes) {
-                        Log.v("APPD", "Main: Item count is " + notes.size());
+                        Log.v("Alder", "Main: Item count is " + notes.size());
+
+                        // Wait for the list to be updated completely
+                        if (listViewModel.inProgress) {
+                            Log.v("Alder", "Still updating list");
+                            return;
+                        }
+
+                        adapter.setNotes(notes);
+                        listSize = notes.size();
 
                         if (notes.size() == 0) {
                             recyclerView.setVisibility(View.INVISIBLE);
@@ -69,18 +87,9 @@ public class MainActivity extends AppCompatActivity {
                             findViewById(R.id.animation_view).setVisibility(View.INVISIBLE);
                         }
 
-                        if (listViewModel.inProgress) {
-                            return;
-                        }
-
-                        adapter.setNotes(notes);
-                        for (int i = 0; i < notes.size(); i++) {
-                            Log.v("POS1", String.valueOf(notes.get(i).getPosition()));
-                        }
                         Log.v("APPD", "Updated notes list");
                     }
                 });
-
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -99,9 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     dragFrom = fromPosition;
                 }
                 dragTo = toPosition;
-
                 adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-
                 return true;
             }
 
@@ -112,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
                     listViewModel.moveNote(adapter.getNote(dragFrom), adapter.getNote(dragTo), adapter);
-                    adapter.notifyItemMoved(dragFrom, dragTo);
                 }
                 dragTo = dragFrom = -1;
             }
@@ -124,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -133,18 +140,24 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.v("APPD", "Got intent ! " + requestCode);
+        Log.v("Alder", "Got intent ! " + requestCode);
 
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
-            Log.v("APPD", "Inserting note " + note.getTitle());
+            Log.v("Alder", "Inserting note " + note.getTitle());
             listViewModel.insertNote(note);
+
+            recyclerView.smoothScrollToPosition(recyclerView.FOCUS_DOWN);
+            scrollBar.computeScroll();
+            adapter.notifyItemInserted(listSize);
+
         } else if (resultCode == RESULT_CANCELED) {
         } else {
-            Toast.makeText(getApplicationContext(), "Title can't be empty", Toast.LENGTH_LONG).show();
+            showSnackBar("Title can't be empty");
         }
     }
 
+    // Helper to print a snackbar, just pass in the string
     private void showSnackBar(String test) {
         android.support.design.widget.Snackbar
                 .make(findViewById(R.id.notes_recycler_view), test, android.support.design.widget.Snackbar.LENGTH_LONG).show();
@@ -186,6 +199,17 @@ public class MainActivity extends AppCompatActivity {
                 switch (speedDialActionItem.getId()) {
                     case R.id.fab_add:
                         showSnackBar("More coming soon!");
+
+//                        ConstraintSet constraintSet1 = new ConstraintSet();
+//                        ConstraintSet constraintSet2 = new ConstraintSet();
+//
+//                        ConstraintLayout constraintLayout = findViewById(R.id.constraint_layout);
+//                        constraintSet2.clone(MainActivity.this, R.layout.activity_list_t);
+//                        constraintSet1.clone(constraintLayout);
+//
+//                        TransitionManager.beginDelayedTransition(constraintLayout);
+//                        constraintSet2.applyTo(constraintLayout);
+
                         speedDialView.close();
                         return false; // true to keep the Speed Dial open
                     default:

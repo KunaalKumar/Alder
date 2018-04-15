@@ -84,6 +84,7 @@ public class NoteRepository {
 
     // Note moved up
     public void moveNote(Note holdingNote, Note destNote, ListViewModel model) {
+        model.inProgress = true;
         synchronized (this) {
             new moveNoteAsyncTask(noteDao, holdingNote, destNote, model).execute();
         }
@@ -100,7 +101,6 @@ public class NoteRepository {
             this.holdingNote = holdingNote;
             this.destNote = destNote;
             this.model = model;
-            model.inProgress = true;
         }
 
         @Override
