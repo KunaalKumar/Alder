@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,8 +23,6 @@ import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
-
-import java.util.List;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -51,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
 
         scrollBar = findViewById(R.id.dragScrollBar);
-        scrollBar.setBarColour(getResources().getColor(R.color.colorAccent));
-
 
         adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -65,30 +62,27 @@ public class MainActivity extends AppCompatActivity {
 //         Observer for Live Data
         listViewModel.getNotesList().
 
-                observe(this, new Observer<List<Note>>() {
-                    @Override
-                    public void onChanged(List<Note> notes) {
-                        Log.v("Alder", "Main: Item count is " + notes.size());
+                observe(this, notes -> {
+                    Log.v("Alder", "Main: Item count is " + notes.size());
 
-                        // Wait for the list to be updated completely
-                        if (listViewModel.inProgress) {
-                            Log.v("Alder", "Still updating list");
-                            return;
-                        }
-
-                        adapter.setNotes(notes);
-                        listSize = notes.size();
-
-                        if (notes.size() == 0) {
-                            recyclerView.setVisibility(View.INVISIBLE);
-                            findViewById(R.id.animation_view).setVisibility(View.VISIBLE);
-                        } else {
-                            recyclerView.setVisibility(View.VISIBLE);
-                            findViewById(R.id.animation_view).setVisibility(View.INVISIBLE);
-                        }
-
-                        Log.v("APPD", "Updated notes list");
+                    // Wait for the list to be updated completely
+                    if (listViewModel.inProgress) {
+                        Log.v("Alder", "Still updating list");
+                        return;
                     }
+
+                    adapter.setNotes(notes);
+                    listSize = notes.size();
+
+                    if (notes.size() == 0) {
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        findViewById(R.id.animation_view).setVisibility(View.VISIBLE);
+                    } else {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        findViewById(R.id.animation_view).setVisibility(View.INVISIBLE);
+                    }
+
+                    Log.v("Alder", "Updated notes list");
                 });
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP,
@@ -159,8 +153,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Helper to print a snackbar, just pass in the string
     private void showSnackBar(String test) {
-        android.support.design.widget.Snackbar
-                .make(findViewById(R.id.notes_recycler_view), test, android.support.design.widget.Snackbar.LENGTH_LONG).show();
+        Snackbar snackbar = Snackbar.make(recyclerView, test, Snackbar.LENGTH_LONG)
+                .setAction("Action", null);
+        View sbView = snackbar.getView();
+        sbView.setBackgroundColor(recyclerView.getResources().getColor(R.color.colorPrimary));
+        snackbar.show();
     }
 
     private void initSpeedDial() {

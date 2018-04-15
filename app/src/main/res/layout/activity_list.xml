@@ -15,6 +15,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:layout_constraintBottom_toTopOf="@id/coordinator_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -42,62 +43,53 @@
         app:lottie_fileName="empty.json"
         app:lottie_loop="true" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@id/my_toolbar"
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/notes_recycler_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_toLeftOf="@id/dragScrollBar"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/recyclerview_item_note" />
+            android:layout_height="match_parent">
 
-        <com.turingtechnologies.materialscrollbar.DragScrollBar
-            android:id="@+id/dragScrollBar"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/notes_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/recyclerview_item_note" />
+
+            <com.turingtechnologies.materialscrollbar.DragScrollBar
+                android:id="@+id/dragScrollBar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                app:msb_lightOnTouch="false"
+                app:msb_recyclerView="@id/notes_recycler_view" />
+
+        </RelativeLayout>
+
+
+        <com.leinardi.android.speeddial.SpeedDialView
+            android:id="@+id/speedDial"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            app:msb_lightOnTouch="true"
-            app:msb_recyclerView="@id/notes_recycler_view" />
-
-    </RelativeLayout>
-
-    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
-        android:id="@+id/overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:clickable_overlay="true"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.leinardi.android.speeddial.SpeedDialView
-        android:id="@+id/speedDial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:elevation="25dp"
-        app:layout_constraintEnd_toEndOf="@+id/my_toolbar"
-        app:layout_constraintHorizontal_bias="0.974"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.051"
-        app:sdExpansionMode="bottom"
-        app:sdMainFabCloseRotateAngle="90"
-        app:sdMainFabCloseSrc="@drawable/ic_add_white_24dp"
-        app:sdMainFabOpenSrc="@drawable/ic_arrow_drop_down_white_24dp" />
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="2dp"
+            android:elevation="8dp"
+            app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:sdExpansionMode="top"
+            app:sdMainFabCloseRotateAngle="90"
+            app:sdMainFabCloseSrc="@drawable/ic_add_white_24dp"
+            app:sdMainFabOpenSrc="@drawable/ic_arrow_drop_up_white_24dp" />
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.constraint.ConstraintLayout>
