@@ -3,23 +3,23 @@ package com.ashiana.zlifno.alder;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
-import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
+import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.List;
 
-import jahirfiquitiva.libs.fabsmenu.FABsMenu;
-import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import maes.tech.intentanim.CustomIntent;
 
 
@@ -27,9 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int NOTE_VIEW_ACTIVITY_REQUEST_CODE = 1;
 
-    private TitleFAB addNote;
     private ListViewModel listViewModel;
-    private FABsMenu fabsMenu;
+    private SpeedDialView speedDialView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +40,16 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        fabsMenu = findViewById(R.id.menu_fab);
-        fabsMenu.attachToRecyclerView(recyclerView);
-
-
         final NoteListAdapter adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
+
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
 
+        initSpeedDial();
 //         Observer for Live Data
         listViewModel.getNotesList().
 
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                Toast.makeText(getApplicationContext(), "Deleted Note", Toast.LENGTH_SHORT).show();
                 listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                 adapter.deleteNote(viewHolder.getAdapterPosition());
             }
@@ -119,27 +116,11 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
-        addNote = findViewById(R.id.add_note);
-
-        addNote.setOnClickListener(new View.OnClickListener()
-
-        {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);
-                Log.v("APPD", "Started Add Note Activity");
-                startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
-            }
-        });
-
         CustomIntent.customType(MainActivity.this, "rotateout-to-rotatein");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        fabsMenu.collapse();
 
         Log.v("APPD", "Got intent ! " + requestCode);
 
@@ -151,5 +132,55 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), "Title can't be empty", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showSnackBar(String test) {
+        android.support.design.widget.Snackbar
+                .make(findViewById(R.id.notes_recycler_view), test, android.support.design.widget.Snackbar.LENGTH_LONG).show();
+    }
+
+    private void initSpeedDial() {
+
+        speedDialView = findViewById(R.id.speedDial);
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_arrow_drop_down_white_24dp)
+                        .setLabel("Coming soon")
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setLabelColor(Color.WHITE)
+                        .create()
+        );
+
+        speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
+            @Override
+            public void onMainActionSelected() {
+                Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);
+                Log.v("Alder", "Started Add Note Activity");
+                startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
+                if (speedDialView.isOpen()) {
+                    speedDialView.close();
+                }
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
+            }
+        });
+
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener()
+
+        {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem speedDialActionItem) {
+                switch (speedDialActionItem.getId()) {
+                    case R.id.fab_add:
+                        showSnackBar("More coming soon!");
+                        speedDialView.close();
+                        return false; // true to keep the Speed Dial open
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 }

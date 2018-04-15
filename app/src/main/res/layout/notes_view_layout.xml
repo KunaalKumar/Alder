@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_note_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="4dp">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/my_toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -19,15 +20,15 @@
             android:layout_height="wrap_content"
             android:text="Add Note"
             android:textColor="@android:color/white"
-            android:textSize="26sp"/>
+            android:textSize="26sp" />
 
     </android.support.v7.widget.Toolbar>
 
     <com.victorminerva.widget.edittext.AutofitEdittext
-        android:layout_below="@id/my_toolbar"
         android:id="@+id/note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
         android:background="@color/colorPrimary"
         android:elevation="2dp"
         android:hint="@string/hint_title"
@@ -59,34 +60,20 @@
 
     </ScrollView>
 
-    <jahirfiquitiva.libs.fabsmenu.FABsMenuLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        app:fabs_menu_clickableOverlay="true">
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:clickable_overlay="true" />
 
-        <jahirfiquitiva.libs.fabsmenu.FABsMenu
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:elevation="8dp"
-            app:fab_expandDirection="up"
-            app:fab_labelsPosition="left"
-            app:fab_moreButtonBackgroundColor="@color/colorAccent"
-            app:fab_moreButtonPlusIcon="@drawable/ic_arrow_drop_up_white_24dp"
-            app:fab_moreButtonRippleColor="@color/colorAccentDark"
-            app:fab_moreButtonSize="normal">
-
-            <jahirfiquitiva.libs.fabsmenu.TitleFAB
-                android:id="@+id/save_note"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_save_white_24dp"
-                app:fabSize="mini"
-                app:fab_title="Save note" />
-
-        </jahirfiquitiva.libs.fabsmenu.FABsMenu>
-
-    </jahirfiquitiva.libs.fabsmenu.FABsMenuLayout>
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/speedDialAddMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:sdExpansionMode="top"
+        app:sdMainFabCloseRotateAngle="90"
+        app:sdMainFabCloseSrc="@drawable/ic_save_white_24dp"
+        app:sdMainFabOpenSrc="@drawable/ic_arrow_drop_up_white_24dp" />
 </RelativeLayout>

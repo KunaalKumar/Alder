@@ -53,9 +53,6 @@ dependencies {
     // https://github.com/victorminerva/AutoResizeEditText
     implementation 'com.github.victorminerva:AutoResizeEditText:0.1.0'
 
-    // https://github.com/jahirfiquitiva/FABsMenu
-    implementation 'me.jahirfiquitiva:FABsMenu:1.1.4'
-
     // https://github.com/rengwuxian/MaterialEditText
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
@@ -68,7 +65,10 @@ dependencies {
     // https://github.com/opacapp/multiline-collapsingtoolbar
     implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
 
-    // https://github.com/turing-tech/MaterialScrollBar
+    // https://github.com/leinardi/FloatingActionButtonSpeedDial
+    implementation "com.leinardi.android:speed-dial:1.0-alpha04"
+
+    // https://github.com/turing-tech/MaterialScrollBar#documentation
     implementation 'com.github.turing-tech:MaterialScrollBar:12.+'
 
 }

@@ -8,19 +8,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
-import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import maes.tech.intentanim.CustomIntent;
 
 public class AddTextNoteActivity extends AppCompatActivity {
@@ -29,7 +27,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
     private AutofitEdittext titleEditText;
     private MaterialEditText noteContentEditText;
-    private TitleFAB saveNoteFab;
+    private SpeedDialView speedDialView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +39,35 @@ public class AddTextNoteActivity extends AppCompatActivity {
         noteContentEditText = findViewById(R.id.note_content);
         noteContentEditText.setMetTextColor(Color.WHITE);
 
-        saveNoteFab = findViewById(R.id.save_note);
+        initSpeedDial();
 
-        saveNoteFab.setOnClickListener(new View.OnClickListener() {
+        CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+        CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
+    }
+
+    private void initSpeedDial() {
+
+        speedDialView = findViewById(R.id.speedDialAddMenu);
+
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.save_note, R.drawable.ic_arrow_drop_down_white_24dp)
+                        .setLabel("More coming soon!")
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setLabelColor(Color.WHITE)
+                        .create()
+        );
+
+        speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
-            public void onClick(View v) {
-                Log.v("APPD", "Clicked Save");
+            public void onMainActionSelected() {
+                Log.v("Alder", "Clicked Save");
                 Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(titleEditText.getText())) {
                     Log.v("APPD", "Title is empty");
@@ -69,16 +90,36 @@ public class AddTextNoteActivity extends AppCompatActivity {
                 }
                 finish();
                 CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
+                if (speedDialView.isOpen()) {
+                    speedDialView.close();
+                }
+            }
+
+            @Override
+            public void onToggleChanged(boolean isOpen) {
             }
         });
 
-        CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener()
+
+        {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem speedDialActionItem) {
+                switch (speedDialActionItem.getId()) {
+                    case R.id.fab_add:
+                        showSnackBar("More coming soon!");
+                        speedDialView.close();
+                        return false; // true to keep the Speed Dial open
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setResult(RESULT_CANCELED);
-        CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
+    private void showSnackBar(String test) {
+        android.support.design.widget.Snackbar
+                .make(findViewById(R.id.add_note_layout), test, android.support.design.widget.Snackbar.LENGTH_LONG).show();
     }
+
 }
