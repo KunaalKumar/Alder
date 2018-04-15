@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
                         adapter.setNotes(notes);
                         for (int i = 0; i < notes.size(); i++) {
-                            Log.v("APPD", notes.get(i).getTitle());
+                            Log.v("POS1", String.valueOf(notes.get(i).getPosition()));
                         }
                         Log.v("APPD", "Updated notes list");
                     }

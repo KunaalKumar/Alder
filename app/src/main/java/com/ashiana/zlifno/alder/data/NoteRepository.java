@@ -73,9 +73,11 @@ public class NoteRepository {
         }
 
         private void moveNotePosUp(int firstItemPos) {
-            for (int i = firstItemPos; i < notes.size(); i++) {
-                Note current = asyncTaskNoteDao.getNoteByPos(i);
+            Note current;
+            for (int i = firstItemPos; i <= notes.size(); i++) {
+                current = asyncTaskNoteDao.getNoteByPos(i);
                 current.setPosition(i - 1);
+                asyncTaskNoteDao.updateNote(current);
             }
         }
     }
