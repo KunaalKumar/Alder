@@ -74,4 +74,3 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     }
 }
 
-

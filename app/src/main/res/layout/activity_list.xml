@@ -44,21 +44,19 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_below="@id/my_toolbar"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/notes_recycler_view"
             android:layout_width="match_parent"
+            android:layout_toLeftOf="@id/dragScrollBar"
             android:layout_height="match_parent"
             tools:listitem="@layout/recyclerview_item_note" />
 
@@ -66,7 +64,7 @@
             android:id="@+id/dragScrollBar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignEnd="@id/notes_recycler_view"
+            android:layout_alignParentEnd="true"
             app:msb_lightOnTouch="true"
             app:msb_recyclerView="@id/notes_recycler_view" />
 

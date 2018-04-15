@@ -41,14 +41,14 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
         initSpeedDial();
 
-        CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
+        CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
-        CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
+        CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
     }
 
     private void initSpeedDial() {
@@ -89,7 +89,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
                             .show();
                 }
                 finish();
-                CustomIntent.customType(AddTextNoteActivity.this, "up-to-bottom");
+                CustomIntent.customType(AddTextNoteActivity.this, "bottom-to-up");
                 if (speedDialView.isOpen()) {
                     speedDialView.close();
                 }
