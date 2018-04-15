@@ -4,12 +4,16 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
@@ -35,17 +39,16 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_list);
 
-        RecyclerView recyclerView = findViewById(R.id.notes_recycler_view);
+        final RecyclerView recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         final NoteListAdapter adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
 
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
 
@@ -57,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onChanged(List<Note> notes) {
                         Log.v("APPD", "Main: Item count is " + notes.size());
+
+                        if (notes.size() == 0) {
+                            recyclerView.setVisibility(View.INVISIBLE);
+                            findViewById(R.id.animation_view).setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            findViewById(R.id.animation_view).setVisibility(View.INVISIBLE);
+                        }
 
                         if (listViewModel.inProgress) {
                             return;
@@ -143,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
         speedDialView = findViewById(R.id.speedDial);
         speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_arrow_drop_down_white_24dp)
+                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_arrow_drop_up_white_24dp)
                         .setLabel("Coming soon")
                         .setFabBackgroundColor(getResources().getColor(R.color.colorAccent))
                         .setLabelBackgroundColor(getResources().getColor(R.color.colorAccent))
