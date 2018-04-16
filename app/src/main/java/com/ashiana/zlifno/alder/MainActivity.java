@@ -125,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+
+                if (!(recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth())) {
+                    speedDialView.show();
+                }
+
                 listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                 adapter.deleteNote(viewHolder.getAdapterPosition());
             }
