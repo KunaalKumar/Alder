@@ -1,32 +1,24 @@
-package com.ashiana.zlifno.alder;
+package com.ashiana.zlifno.alder.Activity;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.TransitionManager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
+import com.ashiana.zlifno.alder.NoteListAdapter;
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
-
-import maes.tech.intentanim.CustomIntent;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,9 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+//        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_list);
 
@@ -55,13 +46,12 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
-        scrollBar = findViewById(R.id.dragScrollBar);
+//        scrollBar = findViewById(R.id.dragScrollBar);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
-
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
 
         initSpeedDial();
@@ -126,9 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
 
-                if (!(recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth())) {
-                    speedDialView.show();
-                }
+                checkScroll();
 
                 listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                 adapter.deleteNote(viewHolder.getAdapterPosition());
@@ -138,8 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        CustomIntent.customType(MainActivity.this, "rotateout-to-rotatein");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,13 +140,18 @@ public class MainActivity extends AppCompatActivity {
             Log.v("Alder", "Inserting note " + note.getTitle());
             listViewModel.insertNote(note);
 
-            recyclerView.smoothScrollToPosition(recyclerView.FOCUS_DOWN);
-            scrollBar.computeScroll();
+            recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
             adapter.notifyItemInserted(listSize);
 
         } else if (resultCode == RESULT_CANCELED) {
         } else {
             showSnackBar("Title can't be empty");
+        }
+    }
+
+    public void checkScroll() {
+        if (!(recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth())) {
+            speedDialView.show();
         }
     }
 

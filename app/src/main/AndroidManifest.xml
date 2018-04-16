@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ashiana.zlifno.alder.MainActivity"
-            android:theme="@style/SplashTheme">
+        <activity android:name=".Activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -18,9 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.ashiana.zlifno.alder.Activity.MainActivity"></activity>
         <activity
-            android:name="com.ashiana.zlifno.alder.AddTextNoteActivity"
-            android:parentActivityName="com.ashiana.zlifno.alder.MainActivity">
+            android:name="com.ashiana.zlifno.alder.Activity.AddTextNoteActivity"
+            android:parentActivityName="com.ashiana.zlifno.alder.Activity.MainActivity">
 
         </activity>
     </application>

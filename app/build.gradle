@@ -63,11 +63,13 @@ dependencies {
     implementation 'com.github.turing-tech:MaterialScrollBar:12.+'
     // https://github.com/airbnb/lottie-android
     implementation 'com.airbnb.android:lottie:2.5.4'
-
+    // http://jakewharton.github.io/butterknife/
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
-    compile 'com.skyfishjy.ripplebackground:library:1.0.1'
+    // https://github.com/skyfishjy/android-ripple-background
+    implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
+    // https://github.com/ViksaaSkool/AwesomeSplash
+    implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
 }
 
 android {

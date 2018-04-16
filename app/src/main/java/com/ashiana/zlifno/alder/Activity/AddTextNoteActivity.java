@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder;
+package com.ashiana.zlifno.alder.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;

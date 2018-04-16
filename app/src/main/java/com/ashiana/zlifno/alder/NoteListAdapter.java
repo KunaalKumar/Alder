@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ashiana.zlifno.alder.Activity.MainActivity;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 
@@ -27,11 +28,11 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     public static RippleBackground rippleBackground;
 
 
-    NoteListAdapter(Context context) {
+    public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
 
-    void setNotes(List<Note> words) {
+    public void setNotes(List<Note> words) {
         mNotes = words;
         Log.v("Alder", "Adapter: Item count is " + getItemCount());
         notifyDataSetChanged();
@@ -54,7 +55,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
                 mNotes.get(position).getTimeCreated().equals(MainActivity.isNewTime)) {
             rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
-            timer = new CountDownTimer(3000, 1000) {
+            timer = new CountDownTimer(2000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
                     animTime = millisUntilFinished / 1000;
@@ -85,11 +86,11 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     }
 
 
-    void deleteNote(int position) {
+    public void deleteNote(int position) {
         notifyItemRemoved(position);
     }
 
-    Note getNote(int position) {
+    public Note getNote(int position) {
         return mNotes.get(position);
     }
 }
