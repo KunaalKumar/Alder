@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/note_layout">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_margin="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="5dp">
+
+
+    <com.skyfishjy.library.RippleBackground xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:elevation="50dp"
-        android:minHeight="150dp"
-        card_view:cardCornerRadius="5dp">
+        android:layout_height="match_parent"
+        app:rb_color="@color/colorPrimary"
+        app:rb_duration="3000"
+        app:rb_radius="20dp"
+        app:rb_rippleAmount="2"
+        app:rb_scale="6">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="150dp">
+            android:layout_height="match_parent"
+            android:clickable="false">
 
-            <com.rengwuxian.materialedittext.MaterialEditText
+            <TextView
                 android:id="@+id/card_note_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:clickable="false"
                 android:text="@string/card_note_title"
                 android:textAlignment="center"
                 android:textSize="36sp"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:met_hideUnderline="true" />
+                card_view:layout_constraintTop_toTopOf="parent" />
 
             <View
+                android:id="@+id/line"
                 android:layout_width="200dp"
                 android:layout_height="1dp"
                 android:layout_marginBottom="8dp"
@@ -43,30 +52,28 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:background="@color/colorAccent"
+                android:clickable="false"
                 card_view:layout_constraintBottom_toTopOf="@+id/card_time_created"
                 card_view:layout_constraintDimensionRatio="w,1:1"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/card_note_title"
-                card_view:layout_constraintVertical_bias="0.8" />
+                card_view:layout_constraintVertical_bias="0.58000004" />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
+            <TextView
                 android:id="@+id/card_time_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
+                android:clickable="false"
                 android:text="@string/card_time_created"
                 android:textSize="16sp"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/card_note_title"
-                card_view:met_hideUnderline="true" />
+                card_view:layout_constraintTop_toBottomOf="@id/line" />
 
         </android.support.constraint.ConstraintLayout>
-
-    </android.support.v7.widget.CardView>
-
-</RelativeLayout>
+    </com.skyfishjy.library.RippleBackground>
+</android.support.v7.widget.CardView>

@@ -1,53 +1,34 @@
 package com.ashiana.zlifno.alder;
 
-import android.app.LauncherActivity;
 import android.content.Context;
+import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.data.Note;
-import com.rengwuxian.materialedittext.MaterialEditText;
+import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 
-public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
+import butterknife.BindView;
 
-    class NoteViewHolder extends RecyclerView.ViewHolder {
-        private final MaterialEditText noteTitleView;
-        private final MaterialEditText noteTimeCreatedView;
-
-        private NoteViewHolder(View itemView) {
-            super(itemView);
-            noteTitleView = itemView.findViewById(R.id.card_note_title);
-            noteTitleView.setInputType(0);
-
-            noteTimeCreatedView = itemView.findViewById(R.id.card_time_created);
-            noteTimeCreatedView.setInputType(0);
-        }
-    }
+public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Note> mNotes; // Cached copy of notes
+    public static long animTime;
+    public static CountDownTimer timer;
+    public static RippleBackground rippleBackground;
+
 
     NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-    }
-
-    @Override
-    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recyclerview_item_note, parent, false);
-        return new NoteViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(NoteViewHolder holder, int position) {
-        Note current = mNotes.get(position);
-        holder.noteTitleView.setText(current.getTitle());
-        holder.noteTimeCreatedView.setText(current.getTimeCreated());
     }
 
     void setNotes(List<Note> words) {
@@ -56,12 +37,42 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         notifyDataSetChanged();
     }
 
-    void deleteNote(int position) {
-        notifyItemRemoved(position);
+    @NonNull
+    @Override
+    public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.text_note_card, parent, false);
+        return new NoteViewHolder(itemView);
     }
 
-    Note getNote(int position) {
-        return mNotes.get(position);
+    @Override
+    public void onBindViewHolder(NoteViewHolder holder, int position) {
+        holder.currentItem = mNotes.get(position);
+        holder.noteTitleView.setText(holder.currentItem.getTitle());
+        holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
+
+        if (mNotes.get(position).getTitle().equals(MainActivity.isNewTitle) &&
+                mNotes.get(position).getTimeCreated().equals(MainActivity.isNewTime)) {
+            rippleBackground = NoteViewHolder.parent.findViewById(R.id.content);
+            rippleBackground.startRippleAnimation();
+            timer = new CountDownTimer(3000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    animTime = millisUntilFinished / 1000;
+                }
+
+                public void onFinish() {
+                    rippleBackground.stopRippleAnimation();
+                }
+
+            }.start();
+
+            MainActivity.isNewTitle = null;
+            MainActivity.isNewTime = null;
+        }
+        holder.setItemClickListener((view, position1) -> {
+            Note current = mNotes.get(position1);
+            Snackbar.make(view, current.getTitle() + "Clicked !", Snackbar.LENGTH_LONG).show();
+        });
     }
 
     // getItemCount() is called many times, and when it is first called,
@@ -72,5 +83,51 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
             return mNotes.size();
         else return 0;
     }
+
+
+    void deleteNote(int position) {
+        notifyItemRemoved(position);
+    }
+
+    Note getNote(int position) {
+        return mNotes.get(position);
+    }
 }
 
+class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @BindView(R.id.card_note_title)
+    public TextView noteTitleView;
+    @BindView(R.id.card_time_created)
+    public TextView noteTimeCreatedView;
+
+    public static View parent;
+
+    public Note currentItem;
+    ItemClickListener itemClickListener;
+
+    public NoteViewHolder(View itemView) {
+        super(itemView);
+
+        parent = itemView;
+        noteTitleView = itemView.findViewById(R.id.card_note_title);
+        noteTitleView.setInputType(0);
+
+        noteTimeCreatedView = itemView.findViewById(R.id.card_time_created);
+        noteTimeCreatedView.setInputType(0);
+
+        itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+//            Note note = mNotes.get(getAdapterPosition());
+//            showSnackBar(note.getTitle());
+        itemClickListener.onItemClick(v, getLayoutPosition());
+    }
+
+    public void setItemClickListener(ItemClickListener ic)
+
+    {
+        this.itemClickListener = ic;
+    }
+}

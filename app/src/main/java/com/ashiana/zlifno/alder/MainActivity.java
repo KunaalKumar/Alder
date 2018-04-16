@@ -14,10 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private MaterialScrollBar scrollBar;
     private NoteListAdapter adapter;
     private int listSize;
+    public static String isNewTitle;
+    public static String isNewTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +50,17 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_list);
 
+        isNewTitle = null;
+        isNewTime = null;
+
         recyclerView = findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
-
         scrollBar = findViewById(R.id.dragScrollBar);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new NoteListAdapter(this);
         recyclerView.setAdapter(adapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
 
@@ -138,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
+            isNewTitle = note.getTitle();
+            isNewTime = note.getTimeCreated();
             Log.v("Alder", "Inserting note " + note.getTitle());
             listViewModel.insertNote(note);
 
@@ -177,6 +185,12 @@ public class MainActivity extends AppCompatActivity {
             public void onMainActionSelected() {
                 Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);
                 Log.v("Alder", "Started Add Note Activity");
+
+                if (NoteListAdapter.animTime != 0) {
+                    NoteListAdapter.timer.cancel();
+                    NoteListAdapter.rippleBackground.stopRippleAnimation();
+                }
+
                 startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
                 if (speedDialView.isOpen()) {
                     speedDialView.close();

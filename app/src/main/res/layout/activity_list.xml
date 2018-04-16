@@ -43,7 +43,6 @@
         app:lottie_fileName="empty.json"
         app:lottie_loop="true" />
 
-
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
@@ -62,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/recyclerview_item_note" />
+                tools:listitem="@layout/text_note_card" />
 
             <com.turingtechnologies.materialscrollbar.DragScrollBar
                 android:id="@+id/dragScrollBar"
@@ -90,6 +89,6 @@
             app:sdExpansionMode="top"
             app:sdMainFabCloseRotateAngle="90"
             app:sdMainFabCloseSrc="@drawable/ic_add_white_24dp"
-            app:sdMainFabOpenSrc="@drawable/ic_arrow_drop_up_white_24dp" />
+            app:sdMainFabOpenSrc="@drawable/ic_add_white_24dp" />
     </android.support.design.widget.CoordinatorLayout>
 </android.support.constraint.ConstraintLayout>
