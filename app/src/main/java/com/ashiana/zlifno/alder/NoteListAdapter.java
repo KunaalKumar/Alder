@@ -52,7 +52,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
         if (mNotes.get(position).getTitle().equals(MainActivity.isNewTitle) &&
                 mNotes.get(position).getTimeCreated().equals(MainActivity.isNewTime)) {
-            rippleBackground = NoteViewHolder.parent.findViewById(R.id.content);
+            rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             timer = new CountDownTimer(3000, 1000) {
 
@@ -100,7 +100,7 @@ class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
     @BindView(R.id.card_time_created)
     public TextView noteTimeCreatedView;
 
-    public static View parent;
+    public View parent;
 
     public Note currentItem;
     ItemClickListener itemClickListener;

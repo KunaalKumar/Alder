@@ -207,14 +207,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener()
-
-        {
-            @Override
-            public boolean onActionSelected(SpeedDialActionItem speedDialActionItem) {
-                switch (speedDialActionItem.getId()) {
-                    case R.id.fab_add:
-                        showSnackBar("More coming soon!");
+        speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
+            switch (speedDialActionItem.getId()) {
+                case R.id.fab_add:
+                    showSnackBar("More coming soon!");
 
 //                        ConstraintSet constraintSet1 = new ConstraintSet();
 //                        ConstraintSet constraintSet2 = new ConstraintSet();
@@ -226,11 +222,10 @@ public class MainActivity extends AppCompatActivity {
 //                        TransitionManager.beginDelayedTransition(constraintLayout);
 //                        constraintSet2.applyTo(constraintLayout);
 
-                        speedDialView.close();
-                        return false; // true to keep the Speed Dial open
-                    default:
-                        return false;
-                }
+                    speedDialView.close();
+                    return false; // true to keep the Speed Dial open
+                default:
+                    return false;
             }
         });
     }
