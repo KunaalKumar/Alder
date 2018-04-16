@@ -1,9 +1,15 @@
 package com.ashiana.zlifno.alder.Activity;
 
+import android.animation.Animator;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +24,6 @@ import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private ListViewModel listViewModel;
     private SpeedDialView speedDialView;
     private RecyclerView recyclerView;
-    private MaterialScrollBar scrollBar;
     private NoteListAdapter adapter;
     private int listSize;
     public static String isNewTitle;
@@ -123,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
@@ -142,10 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
             recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
             adapter.notifyItemInserted(listSize);
+            showSnackBar("Note made!", R.color.colorAccent);
 
         } else if (resultCode == RESULT_CANCELED) {
         } else {
-            showSnackBar("Title can't be empty");
+            showSnackBar("Title can't be empty", android.R.color.holo_red_light);
         }
     }
 
@@ -156,11 +160,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Helper to print a snackbar, just pass in the string
-    private void showSnackBar(String test) {
-        Snackbar snackbar = Snackbar.make(recyclerView, test, Snackbar.LENGTH_LONG)
+    private void showSnackBar(String test, int color) {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.constraint_layout), test, Snackbar.LENGTH_LONG)
                 .setAction("Action", null);
         View sbView = snackbar.getView();
-        sbView.setBackgroundColor(recyclerView.getResources().getColor(R.color.colorPrimary));
+        sbView.setBackgroundColor(color);
         snackbar.show();
     }
 
@@ -179,18 +183,7 @@ public class MainActivity extends AppCompatActivity {
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public void onMainActionSelected() {
-                Intent i = new Intent(getApplicationContext(), AddTextNoteActivity.class);
-                Log.v("Alder", "Started Add Note Activity");
-
-                if (NoteListAdapter.animTime != 0) {
-                    NoteListAdapter.timer.cancel();
-                    NoteListAdapter.rippleBackground.stopRippleAnimation();
-                }
-
-                startActivityForResult(i, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
-                if (speedDialView.isOpen()) {
-                    speedDialView.close();
-                }
+                presentActivity(findViewById(R.id.constraint_layout));
             }
 
             @Override
@@ -201,17 +194,7 @@ public class MainActivity extends AppCompatActivity {
         speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
             switch (speedDialActionItem.getId()) {
                 case R.id.fab_add:
-                    showSnackBar("More coming soon!");
-
-//                        ConstraintSet constraintSet1 = new ConstraintSet();
-//                        ConstraintSet constraintSet2 = new ConstraintSet();
-//
-//                        ConstraintLayout constraintLayout = findViewById(R.id.constraint_layout);
-//                        constraintSet2.clone(MainActivity.this, R.layout.activity_list_t);
-//                        constraintSet1.clone(constraintLayout);
-//
-//                        TransitionManager.beginDelayedTransition(constraintLayout);
-//                        constraintSet2.applyTo(constraintLayout);
+                    showSnackBar("More coming soon!", R.color.colorPrimaryDark);
 
                     speedDialView.close();
                     return false; // true to keep the Speed Dial open
@@ -219,5 +202,30 @@ public class MainActivity extends AppCompatActivity {
                     return false;
             }
         });
+    }
+
+    public void presentActivity(View view) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, view, "transition");
+        int revealX = view.getRight();
+        int revealY = view.getBottom();
+
+        Intent intent = new Intent(this, AddTextNoteActivity.class);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+
+        ActivityCompat.startActivityForResult(this, intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE, options.toBundle());
+
+        if (speedDialView.isOpen()) {
+            speedDialView.close();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

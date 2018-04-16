@@ -1,14 +1,16 @@
 package com.ashiana.zlifno.alder;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.Activity.MainActivity;
@@ -23,10 +25,6 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Note> mNotes; // Cached copy of notes
-    public static long animTime;
-    public static CountDownTimer timer;
-    public static RippleBackground rippleBackground;
-
 
     public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -53,12 +51,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
         if (mNotes.get(position).getTitle().equals(MainActivity.isNewTitle) &&
                 mNotes.get(position).getTimeCreated().equals(MainActivity.isNewTime)) {
-            rippleBackground = holder.parent.findViewById(R.id.content);
+            RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
-            timer = new CountDownTimer(2000, 1000) {
+            new CountDownTimer(2000, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    animTime = millisUntilFinished / 1000;
+
                 }
 
                 public void onFinish() {
@@ -72,7 +70,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         }
         holder.setItemClickListener((view, position1) -> {
             Note current = mNotes.get(position1);
-            Snackbar.make(view, current.getTitle() + "Clicked !", Snackbar.LENGTH_LONG).show();
+            // TODO : Open note in viewer
+//            Snackbar.make(view, current.getTitle() + "Clicked !", Snackbar.LENGTH_LONG).show();
         });
     }
 

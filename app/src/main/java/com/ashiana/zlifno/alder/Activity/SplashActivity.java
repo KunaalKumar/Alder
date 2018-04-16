@@ -26,17 +26,17 @@ public class SplashActivity extends AwesomeSplash {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         configSplash.setBackgroundColor(R.color.colorPrimary);
-        configSplash.setAnimCircularRevealDuration(1000);
+        configSplash.setAnimCircularRevealDuration(500);
         configSplash.setRevealFlagX(Flags.WITH_LOGO);
         configSplash.setRevealFlagY(Flags.WITH_LOGO);
         configSplash.setLogoSplash(R.drawable.alder_icon);
-        configSplash.setAnimLogoSplashDuration(1000);
+        configSplash.setAnimLogoSplashDuration(500);
         configSplash.setAnimLogoSplashTechnique(Techniques.FadeIn);
         configSplash.setTitleSplash(getString(R.string.app_name));
         configSplash.setTitleTextColor(R.color.text_shadow_white);
         configSplash.setTitleTextSize(30f);
         configSplash.setTitleFont("fonts/Sansation_Light.ttf");
-        configSplash.setAnimTitleDuration(1000);
+        configSplash.setAnimTitleDuration(500);
         configSplash.setAnimTitleTechnique(Techniques.FadeIn);
     }
 

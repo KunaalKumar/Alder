@@ -17,10 +17,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ashiana.zlifno.alder.Activity.MainActivity"></activity>
+        <activity
+            android:name="com.ashiana.zlifno.alder.Activity.MainActivity"
+            android:theme="@style/AppTheme">
+
+        </activity>
         <activity
             android:name="com.ashiana.zlifno.alder.Activity.AddTextNoteActivity"
-            android:parentActivityName="com.ashiana.zlifno.alder.Activity.MainActivity">
+            android:parentActivityName="com.ashiana.zlifno.alder.Activity.MainActivity"
+            android:theme="@style/add_note"
+            android:windowSoftInputMode="stateHidden">
 
         </activity>
     </application>
