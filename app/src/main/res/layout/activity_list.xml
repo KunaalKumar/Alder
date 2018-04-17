@@ -10,7 +10,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
@@ -22,7 +22,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="s"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
             android:textSize="26sp" />
@@ -50,29 +49,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar">
 
-        <RelativeLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/notes_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scrollbars="vertical"
+            app:fastScrollEnabled="true"
+            app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
+            app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
+            app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/text_note_card" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/notes_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:scrollbars="vertical"
-                app:fastScrollEnabled="true"
-                app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-                app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-                app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-                app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/text_note_card" />
-
-        </RelativeLayout>
-
+        <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:clickable_overlay="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.leinardi.android.speeddial.SpeedDialView
             android:id="@+id/speedDial"

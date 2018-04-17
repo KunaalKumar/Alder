@@ -1,19 +1,18 @@
 package com.ashiana.zlifno.alder.Activity;
 
-import android.animation.Animator;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
+import com.danimahardhika.cafebar.CafeBar;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -131,25 +131,54 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    // TODO add method for transition
+    public static void updateNote(View view, Note note, Context context) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation((Activity) context, view, "transition");
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        int revealX = location[0] + view.getMeasuredWidth();
+        int revealY = location[1] + view.getMeasuredHeight();
+
+        Intent intent = new Intent(context, AddTextNoteActivity.class);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CURRENT_NOTE, note);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+
+        ActivityCompat.startActivityForResult((Activity) context, intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE, options.toBundle());
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.v("Alder", "Got intent ! " + requestCode);
 
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
-            isNewTitle = note.getTitle();
-            isNewTime = note.getTimeCreated();
-            Log.v("Alder", "Inserting note " + note.getTitle());
-            listViewModel.insertNote(note);
+            if (data.hasExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA)) {
+                listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA));
+                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
+                adapter.notifyItemInserted(listSize);
+                showSnackBar("Note updated!", R.color.colorAccent);
+            } else if (data.hasExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA)) {
+                Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
+                isNewTitle = note.getTitle();
+                isNewTime = note.getTimeCreated();
+                Log.v("Alder", "Inserting note " + note.getTitle());
+                listViewModel.insertNote(note);
 
-            recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-            adapter.notifyItemInserted(listSize);
-            showSnackBar("Note made!", R.color.colorAccent);
+                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
+                adapter.notifyItemInserted(listSize);
+                showSnackBar("Note made!", R.color.colorAccent);
+            }
 
         } else if (resultCode == RESULT_CANCELED) {
         } else {
             showSnackBar("Title can't be empty", android.R.color.holo_red_light);
+        }
+
+        // Close fab after activity return
+        if (speedDialView.isOpen()) {
+            speedDialView.close();
         }
     }
 
@@ -159,13 +188,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Helper to print a snackbar, just pass in the string
+    // Helper to print a snackbar, just pass in the string and background color
     private void showSnackBar(String test, int color) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.constraint_layout), test, Snackbar.LENGTH_LONG)
-                .setAction("Action", null);
-        View sbView = snackbar.getView();
-        sbView.setBackgroundColor(color);
-        snackbar.show();
+//        Snackbar.make(findViewById(R.id.constraint_layout), test, Snackbar.LENGTH_LONG).show();
+        CafeBar.make(MainActivity.this, test, CafeBar.Duration.MEDIUM).show();
     }
 
     private void initSpeedDial() {
@@ -182,8 +208,9 @@ public class MainActivity extends AppCompatActivity {
 
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
-            public void onMainActionSelected() {
+            public boolean onMainActionSelected() {
                 presentActivity(findViewById(R.id.constraint_layout));
+                return true;
             }
 
             @Override
@@ -215,10 +242,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
 
         ActivityCompat.startActivityForResult(this, intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE, options.toBundle());
-
-        if (speedDialView.isOpen()) {
-            speedDialView.close();
-        }
     }
 
     @Override

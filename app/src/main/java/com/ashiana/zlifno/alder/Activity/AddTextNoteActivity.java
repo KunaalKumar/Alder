@@ -31,9 +31,11 @@ import java.util.Date;
 
 public class AddTextNoteActivity extends AppCompatActivity {
 
-    public static final String SAVE_NOTE_EXTRA = "com.ashiana.zlifno.to_do.SAVE_NOTE";
-    public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
-    public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
+    public static final String SAVE_NOTE_EXTRA = "com.ashiana.zlifno.alder.SAVE_NOTE";
+    public static final String UPDATE_NOTE_EXTRA = "com.ashiana.zlifno.alder.UPDATE_NOTE";
+    public static final String EXTRA_CIRCULAR_REVEAL_X = "com.ashiana.zlifno.alderEXTRA_CIRCULAR_REVEAL_X";
+    public static final String EXTRA_CIRCULAR_REVEAL_Y = "com.ashiana.zlifno.alderEXTRA_CIRCULAR_REVEAL_Y";
+    public static final String EXTRA_CURRENT_NOTE = "com.ashiana.zlifno.alder.CURRENT_NOTE";
 
     View rootLayout;
     private int revealX;
@@ -42,6 +44,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
     private AutofitEdittext titleEditText;
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
+    private Note current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,11 @@ public class AddTextNoteActivity extends AppCompatActivity {
         if (savedInstanceState == null &&
                 intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
                 intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
+
+            if (intent.hasExtra(EXTRA_CURRENT_NOTE)) {
+                current = (Note) intent.getSerializableExtra(EXTRA_CURRENT_NOTE);
+            }
+
             rootLayout.setVisibility(View.INVISIBLE);
 
             revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
@@ -79,6 +87,11 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
         noteContentEditText = findViewById(R.id.note_content);
         noteContentEditText.setTextColor(Color.WHITE);
+
+        if (current != null) {
+            titleEditText.setText(current.getTitle());
+            noteContentEditText.setText(current.getContent());
+        }
 
         initSpeedDial();
 
@@ -119,6 +132,9 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        // TODO:  Add check to see if content changed, to save dialog
+
         unRevealActivity();
         setResult(RESULT_CANCELED);
         super.onBackPressed();
@@ -139,27 +155,34 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
-            public void onMainActionSelected() {
+            public boolean onMainActionSelected() {
                 Log.v("Alder", "Clicked Save");
                 Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(titleEditText.getText())) {
                     Log.v("APPD", "Title is empty");
                     setResult(RESULT_CANCELED, saveNoteIntent);
                 } else {
-                    String noteTitle = titleEditText.getText().toString();
-                    String noteContent = noteContentEditText.getText().toString();
+                    if (current != null) {
+                        current.setTitle(titleEditText.getText().toString());
+                        current.setContent(noteContentEditText.getText().toString());
+                        saveNoteIntent.putExtra(UPDATE_NOTE_EXTRA, current);
+                        setResult(RESULT_OK, saveNoteIntent);
+                    } else {
+                        String noteTitle = titleEditText.getText().toString();
+                        String noteContent = noteContentEditText.getText().toString();
 
-                    SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
+                        SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
 
-                    Note toSend = new Note(noteTitle, noteContent, "Time created: " + dateFromat.format(new Date()));
+                        Note toSend = new Note(noteTitle, noteContent, "Time created: " + dateFromat.format(new Date()));
 
-                    saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
-                    setResult(RESULT_OK, saveNoteIntent);
+                        saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
+                        setResult(RESULT_OK, saveNoteIntent);
+                    }
+
                 }
                 unRevealActivity();
-
                 finish();
-
+                return false;
             }
 
             @Override

@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
     android:elevation="4dp"
+    android:fitsSystemWindows="true"
     android:theme="@style/add_note"
     tools:context=".Activity.AddTextNoteActivity">
 
@@ -37,11 +38,11 @@
         android:elevation="2dp"
         android:hint="@string/hint_title"
         android:inputType="textCapSentences"
-        android:textColorHighlight="@color/colorPrimary"
         android:maxLength="50"
         android:maxLines="2"
         android:padding="8dp"
         android:textColor="@android:color/white"
+        android:textColorHighlight="@color/colorPrimary"
         android:textSize="44sp" />
 
     <ScrollView
@@ -55,31 +56,34 @@
             android:id="@+id/note_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
             android:hint="@string/hint_note"
             android:inputType="textCapSentences|textMultiLine"
             android:padding="8dp"
             android:textColor="@android:color/white"
             android:textColorHighlight="@color/colorPrimary"
-            app:met_hideUnderline="true"
             android:textSize="32sp"
-            android:background="@color/colorAccent"/>
+            app:met_hideUnderline="true" />
 
     </ScrollView>
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
         android:id="@+id/overlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:clickable_overlay="true" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:clickable_overlay="true"
+        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior" />
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/speedDialAddMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:elevation="8dp"
         android:layout_alignParentEnd="true"
+        android:elevation="8dp"
+        android:fitsSystemWindows="true"
         app:sdExpansionMode="top"
+        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
         app:sdMainFabCloseBackgroundColor="@color/colorPrimary"
         app:sdMainFabCloseRotateAngle="90"
         app:sdMainFabCloseSrc="@drawable/ic_save_white_24dp"

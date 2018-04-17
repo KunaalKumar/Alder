@@ -25,6 +25,24 @@ public class NoteRepository {
         return notesList;
     }
 
+    public void updateNote(Note note) {
+        new updateAsyncTask(noteDao).execute(note);
+    }
+
+    private static class updateAsyncTask extends AsyncTask<Note, Void, Void> {
+        private NoteDao asynTaskNoteDao;
+
+        updateAsyncTask(NoteDao dao) {
+            asynTaskNoteDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Note... notes) {
+            Log.v("Alder", "REPO: Started updating note in background");
+            asynTaskNoteDao.updateNote(notes[0]);
+            return null;
+        }
+    }
 
     public void insertNote(Note note) {
         note.setPosition(notesList.getValue().size() + 1);

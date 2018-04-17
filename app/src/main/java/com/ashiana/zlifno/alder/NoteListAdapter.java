@@ -1,18 +1,23 @@
 package com.ashiana.zlifno.alder;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
+import com.ashiana.zlifno.alder.Activity.AddTextNoteActivity;
 import com.ashiana.zlifno.alder.Activity.MainActivity;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
@@ -25,9 +30,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Note> mNotes; // Cached copy of notes
+    private Context context;
+    public static int posX;
+    public static int posY;
 
     public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     public void setNotes(List<Note> words) {
@@ -43,6 +52,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         return new NoteViewHolder(itemView);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         holder.currentItem = mNotes.get(position);
@@ -68,10 +78,11 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
             MainActivity.isNewTitle = null;
             MainActivity.isNewTime = null;
         }
+
         holder.setItemClickListener((view, position1) -> {
             Note current = mNotes.get(position1);
-            // TODO : Open note in viewer
-//            Snackbar.make(view, current.getTitle() + "Clicked !", Snackbar.LENGTH_LONG).show();
+
+            MainActivity.updateNote(view, current, context);
         });
     }
 
