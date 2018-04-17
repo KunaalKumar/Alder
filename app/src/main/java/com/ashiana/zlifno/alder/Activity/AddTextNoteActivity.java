@@ -134,9 +134,8 @@ public class AddTextNoteActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         // TODO:  Add check to see if content changed, to save dialog
-
-        unRevealActivity();
         setResult(RESULT_CANCELED);
+        unRevealActivity();
         super.onBackPressed();
     }
 

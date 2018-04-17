@@ -12,10 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
                 checkScroll();
 
+                showSnackBar("Note deleted", android.R.color.holo_orange_dark);
                 listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                 adapter.deleteNote(viewHolder.getAdapterPosition());
             }
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA));
                 recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
                 adapter.notifyItemInserted(listSize);
-                showSnackBar("Note updated!", R.color.colorAccent);
+                showSnackBar("Note updated", R.color.colorAccent);
             } else if (data.hasExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA)) {
                 Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
                 isNewTitle = note.getTitle();
@@ -168,14 +169,12 @@ public class MainActivity extends AppCompatActivity {
 
                 recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
                 adapter.notifyItemInserted(listSize);
-                showSnackBar("Note made!", R.color.colorAccent);
+                showSnackBar("Note made", R.color.colorAccent);
             }
 
         } else if (resultCode == RESULT_CANCELED) {
-        } else {
             showSnackBar("Title can't be empty", android.R.color.holo_red_light);
         }
-
         // Close fab after activity return
         if (speedDialView.isOpen()) {
             speedDialView.close();
@@ -190,8 +189,16 @@ public class MainActivity extends AppCompatActivity {
 
     // Helper to print a snackbar, just pass in the string and background color
     private void showSnackBar(String test, int color) {
-//        Snackbar.make(findViewById(R.id.constraint_layout), test, Snackbar.LENGTH_LONG).show();
-        CafeBar.make(MainActivity.this, test, CafeBar.Duration.MEDIUM).show();
+//        CafeBar.make(findViewById(R.id.coordinator_layout), test, CafeBar.Duration.MEDIUM).show();
+
+        Snackbar snackbar;
+        snackbar = Snackbar.make(findViewById(R.id.coordinator_layout), test, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(getResources().getColor(color));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+        snackbar.show();
+
     }
 
     private void initSpeedDial() {

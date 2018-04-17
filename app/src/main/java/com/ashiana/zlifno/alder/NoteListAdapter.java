@@ -31,8 +31,6 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     private final LayoutInflater mInflater;
     private List<Note> mNotes; // Cached copy of notes
     private Context context;
-    public static int posX;
-    public static int posY;
 
     public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
