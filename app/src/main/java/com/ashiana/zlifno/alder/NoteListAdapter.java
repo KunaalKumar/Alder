@@ -131,7 +131,7 @@ class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
     public void onClick(View v) {
 //            Note note = mNotes.get(getAdapterPosition());
 //            showSnackBar(note.getTitle());
-        itemClickListener.onItemClick(v, getLayoutPosition());
+        itemClickListener.onItemClick(v, getAdapterPosition());
     }
 
     public void setItemClickListener(ItemClickListener ic)

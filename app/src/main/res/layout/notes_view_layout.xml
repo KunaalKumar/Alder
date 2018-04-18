@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    android:elevation="4dp"
-    android:fitsSystemWindows="true"
     android:theme="@style/add_note"
     tools:context=".Activity.AddTextNoteActivity">
 
@@ -16,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorAccentDark"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:elevation="4dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +77,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:elevation="8dp"
-        android:fitsSystemWindows="true"
         app:sdExpansionMode="top"
         app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
         app:sdMainFabCloseBackgroundColor="@color/colorPrimary"

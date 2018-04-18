@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -21,7 +22,6 @@ import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.ashiana.zlifno.alder.data.Note;
-import com.danimahardhika.cafebar.CafeBar;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -136,16 +136,13 @@ public class MainActivity extends AppCompatActivity {
     public static void updateNote(View view, Note note, Context context) {
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation((Activity) context, view, "transition");
-        int location[] = new int[2];
-        view.getLocationOnScreen(location);
-        int revealX = location[0] + view.getMeasuredWidth();
-        int revealY = location[1] + view.getMeasuredHeight();
 
         Intent intent = new Intent(context, AddTextNoteActivity.class);
         intent.putExtra(AddTextNoteActivity.EXTRA_CURRENT_NOTE, note);
-        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
-        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_X, view.getRight());
+        intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, view.getBottom());
 
+//        ((Activity) context).startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
         ActivityCompat.startActivityForResult((Activity) context, intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE, options.toBundle());
     }
 
@@ -173,7 +170,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
         } else if (resultCode == RESULT_CANCELED) {
-            showSnackBar("Title can't be empty", android.R.color.holo_red_light);
+            if (!AddTextNoteActivity.viaBack) {
+                showSnackBar("Title can't be empty", android.R.color.holo_red_light);
+                AddTextNoteActivity.viaBack = false;
+            }
         }
         // Close fab after activity return
         if (speedDialView.isOpen()) {
@@ -215,9 +215,8 @@ public class MainActivity extends AppCompatActivity {
 
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
-            public boolean onMainActionSelected() {
+            public void onMainActionSelected() {
                 presentActivity(findViewById(R.id.constraint_layout));
-                return true;
             }
 
             @Override
@@ -247,15 +246,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddTextNoteActivity.class);
         intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
         intent.putExtra(AddTextNoteActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+//        startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
 
         ActivityCompat.startActivityForResult(this, intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE, options.toBundle());
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (speedDialView.isOpen()) {
+            speedDialView.close();
+        } else {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
     }
 }

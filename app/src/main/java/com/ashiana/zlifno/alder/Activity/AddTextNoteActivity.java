@@ -15,14 +15,11 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.muddzdev.styleabletoastlibrary.StyleableToast;
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
 import java.text.SimpleDateFormat;
@@ -45,23 +42,26 @@ public class AddTextNoteActivity extends AppCompatActivity {
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
     private Note current;
+    public static boolean viaBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notes_view_layout);
 
+        viaBack = false;
         final Intent intent = getIntent();
 
         rootLayout = findViewById(R.id.add_note_layout);
 
+
+        if (intent.hasExtra(EXTRA_CURRENT_NOTE)) {
+            current = (Note) intent.getSerializableExtra(EXTRA_CURRENT_NOTE);
+        }
+
         if (savedInstanceState == null &&
                 intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
                 intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
-
-            if (intent.hasExtra(EXTRA_CURRENT_NOTE)) {
-                current = (Note) intent.getSerializableExtra(EXTRA_CURRENT_NOTE);
-            }
 
             rootLayout.setVisibility(View.INVISIBLE);
 
@@ -103,7 +103,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
             // create the animator for this view (the start radius is zero)
             Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, x, y, 0, finalRadius);
-            circularReveal.setDuration(400);
+            circularReveal.setDuration(350);
             circularReveal.setInterpolator(new AccelerateInterpolator());
 
             // make the view visible and start the animation
@@ -119,7 +119,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
         Animator circularReveal = ViewAnimationUtils.createCircularReveal(
                 rootLayout, revealX, revealY, startRadius, 0);
 
-        circularReveal.setDuration(400);
+        circularReveal.setDuration(500);
         circularReveal.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -135,6 +135,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
         // TODO:  Add check to see if content changed, to save dialog
         setResult(RESULT_CANCELED);
+        viaBack = true;
         unRevealActivity();
         super.onBackPressed();
     }
@@ -154,7 +155,7 @@ public class AddTextNoteActivity extends AppCompatActivity {
 
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
-            public boolean onMainActionSelected() {
+            public void onMainActionSelected() {
                 Log.v("Alder", "Clicked Save");
                 Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(titleEditText.getText())) {
@@ -181,7 +182,6 @@ public class AddTextNoteActivity extends AppCompatActivity {
                 }
                 unRevealActivity();
                 finish();
-                return false;
             }
 
             @Override
