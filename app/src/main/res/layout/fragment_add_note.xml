@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
     android:theme="@style/add_note"
-    tools:context=".Activity.AddTextNoteActivity">
+    tools:context=".Fragment.AddTextNoteFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

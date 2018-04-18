@@ -1,24 +1,17 @@
 package com.ashiana.zlifno.alder;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Activity.AddTextNoteActivity;
-import com.ashiana.zlifno.alder.Activity.MainActivity;
+import com.ashiana.zlifno.alder.Fragment.ListFragment;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 
@@ -57,8 +50,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.noteTitleView.setText(holder.currentItem.getTitle());
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
-        if (mNotes.get(position).getTitle().equals(MainActivity.isNewTitle) &&
-                mNotes.get(position).getTimeCreated().equals(MainActivity.isNewTime)) {
+        if (mNotes.get(position).getTitle().equals(ListFragment.isNewTitle) &&
+                mNotes.get(position).getTimeCreated().equals(ListFragment.isNewTime)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -73,14 +66,14 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
             }.start();
 
-            MainActivity.isNewTitle = null;
-            MainActivity.isNewTime = null;
+            ListFragment.isNewTitle = null;
+            ListFragment.isNewTime = null;
         }
 
         holder.setItemClickListener((view, position1) -> {
             Note current = mNotes.get(position1);
 
-            MainActivity.updateNote(view, current, context);
+            ListFragment.updateNote(current);
         });
     }
 
