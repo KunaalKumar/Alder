@@ -8,6 +8,12 @@
     android:background="@android:color/background_light"
     tools:context=".Activity.MainActivity">
 
+    <!--<fragment-->
+        <!--android:name="com.ashiana.zlifno.alder.Activity.AddTextNoteActivity"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</fragment>-->
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
