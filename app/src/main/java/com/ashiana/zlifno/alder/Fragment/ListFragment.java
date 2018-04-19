@@ -2,12 +2,14 @@ package com.ashiana.zlifno.alder.Fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,7 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
@@ -23,11 +28,19 @@ import com.ashiana.zlifno.alder.data.TextNote;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-
+import com.takusemba.spotlight.SimpleTarget;
+import com.takusemba.spotlight.Spotlight;
 
 public class ListFragment extends Fragment {
 
     static MainIntents intents;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    // Tags for SharedPreferences
+    public static String TAG_FINISHED_SPOTLIGHT1 = "FINISHED_SPOTLIGHT1";
+    public static String TAG_FINISHED_SPOTLIGHT2 = "FINISHED_SPOTLIGHT2";
+    public static String TAG_FINISHED_FINAL_SPOTLIGHT = "FINISHED_FINAL_SPOTLIGHT";
 
     public interface MainIntents {
         void newNote();
@@ -44,6 +57,9 @@ public class ListFragment extends Fragment {
     private int listSize;
     public static String isNewTitle;
     public static String isNewTime;
+
+    // For spotlight
+    SimpleTarget fabSpotlight, animSpotlight, fabSpotlight2, fabSpotlight3, noteCardSpotlight;
 
     public ListFragment() {
 
@@ -68,6 +84,37 @@ public class ListFragment extends Fragment {
         startTouchListener();
 
         initSpeedDial();
+
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                sharedPreferences = getContext().getSharedPreferences("alder_prefs", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                initSpotlights();
+                if (!sharedPreferences.getBoolean(TAG_FINISHED_SPOTLIGHT1, false)) {
+
+                    // callback when Spotlight ends
+                    Spotlight.with(getActivity())
+                            .setOverlayColor(ContextCompat.getColor(getContext(), R.color.background)) // background overlay color
+                            .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
+                            .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
+                            .setTargets(fabSpotlight, animSpotlight, fabSpotlight2) // set targets. see below for more info
+                            .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
+                            .setOnSpotlightEndedListener(() -> {
+                                if (sharedPreferences.getBoolean(TAG_FINISHED_SPOTLIGHT1, true)) {
+                                    speedDialView.open();
+                                    startSpotlight2();
+                                }
+                            })
+                            .start(); // start Spotlight
+
+                    editor.putBoolean(TAG_FINISHED_SPOTLIGHT1, true);
+                    editor.apply();
+
+                }
+            }
+        });
 
         return rootView;
     }
@@ -152,7 +199,21 @@ public class ListFragment extends Fragment {
     }
 
     public void addNote(TextNote textNote) {
+
         Log.v("Alder", "Changing textNote");
+        if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
+            Spotlight.with(getActivity())
+                    .setOverlayColor(ContextCompat.getColor(getContext(), R.color.background)) // background overlay color
+                    .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
+                    .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
+                    .setTargets(noteCardSpotlight) // set targets. see below for more info
+                    .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
+                    .setOnSpotlightEndedListener(() -> {
+                        editor.putBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, true);
+                        editor.apply();
+                    })
+                    .start(); // start Spotlight
+        }
         isNewTitle = textNote.getTitle();
         isNewTime = textNote.getTimeCreated();
         Log.v("Adler", "Adding new textNote " + isNewTitle);
@@ -206,8 +267,6 @@ public class ListFragment extends Fragment {
             public void onMainActionSelected() {
 
                 intents.newNote();
-//                Intent intent = new Intent(getActivity().getBaseContext(), AddTextNoteFragment.class);
-//                startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
             }
 
             @Override
@@ -246,6 +305,56 @@ public class ListFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    private void initSpotlights() {
+        fabSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(speedDialView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(200f) // radius of the Target
+                .setTitle("Fabulous Button") // title
+                .setDescription("This is where you'll be able to add notes") // description
+                .build();
+
+        animSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(getActivity().findViewById(R.id.animation_view))
+                .setRadius(1000f)
+                .setTitle("It's empty here")
+                .setDescription("Why not add something?")
+                .build();
+
+        fabSpotlight2 = new SimpleTarget.Builder(getActivity())
+                .setPoint(speedDialView)
+                .setRadius(200f)
+                .setTitle("Lets add a note")
+                .setDescription("Click here to bring add options")
+                .build();
+
+        fabSpotlight3 = new SimpleTarget.Builder(getActivity())
+                .setPoint(speedDialView)
+                .setRadius(200f)
+                .setTitle("Click here to add a note")
+                .build();
+
+        noteCardSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint((recyclerView.getX() + recyclerView.getRight()) / 2, (recyclerView.getY() + recyclerView.getBottom() / 3)) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(600f) // radius of the Target
+                .setTitle("Congratulations") // title
+                .setDescription("You made your first note.\n Now, swipe it to delete it and you're all done") // description
+                .build();
+    }
+
+    private void startSpotlight2() {
+        Spotlight.with(getActivity())
+                .setOverlayColor(ContextCompat.getColor(getContext(), R.color.background)) // background overlay color
+                .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
+                .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
+                .setTargets(fabSpotlight3) // set targets. see below for more info
+                .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
+                .setOnSpotlightEndedListener(() -> {
+                    editor.putBoolean(TAG_FINISHED_SPOTLIGHT2, true);
+                    editor.apply();
+                })
+                .start(); // start Spotlight
     }
 
 }

@@ -1,46 +1,63 @@
 package com.ashiana.zlifno.alder.Activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
 import com.ashiana.zlifno.alder.Fragment.ListFragment;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.TextNote;
+import com.takusemba.spotlight.Spotlight;
 
 public class ListActivity extends AppCompatActivity implements ListFragment.MainIntents, AddTextNoteFragment.ChangeNoteIntent {
 
     private ListFragment listFragment;
+    private SharedPreferences prefs;
+//    private SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        // For testing with SharedPreferences
+        prefs = getSharedPreferences("alder_prefs", Context.MODE_PRIVATE);
+//        editor = prefs.edit();
+//        editor.clear();
+//        editor.apply();
+
         listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.root_activity);
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            String last = getSupportFragmentManager().getBackStackEntryAt(
-                    getSupportFragmentManager()
-                            .getBackStackEntryCount() - 1)
-                    .getName();
+        if (prefs.getBoolean(ListFragment.TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                String last = getSupportFragmentManager().getBackStackEntryAt(
+                        getSupportFragmentManager()
+                                .getBackStackEntryCount() - 1)
+                        .getName();
 
-            // Coming back from AddTextNote
-            if (last.equals("AddTextNote")) {
-                listFragment.closeFAB();
+                // Coming back from AddTextNote
+                if (last.equals("AddTextNote")) {
+                    listFragment.closeFAB();
+                    super.onBackPressed();
 //                changeBarColors(R.color.colorPrimary);
-                super.onBackPressed();
-            }
-        } else {
-            if (!listFragment.closeFAB()) {
-                super.onBackPressed();
+                }
+            } else {
+                if (!listFragment.closeFAB()) {
+                    super.onBackPressed();
+                }
             }
         }
     }
@@ -78,8 +95,7 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
                     .add(R.id.root_activity, fragment)
                     .addToBackStack("AddTextNote")
                     .commit();
-        }
-        else {
+        } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.root_activity, fragment, "AddTextNote");
         }
@@ -117,6 +133,23 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
         listFragment.closeFAB();
         hideKeyboard();
         getSupportFragmentManager().popBackStack();
-        Toast.makeText(this, "Title is empty", Toast.LENGTH_LONG).show();
+        showSnackBar("Title can't be empty", android.R.color.holo_red_light);
+        Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+// Vibrate for 1 seconds
+        assert v != null;
+        v.vibrate(1000);
+    }
+
+    private void showSnackBar(String test, int color) {
+//        CafeBar.make(findViewById(R.id.coordinator_layout), test, CafeBar.Duration.MEDIUM).show();
+
+        Snackbar snackbar;
+        snackbar = Snackbar.make(this.findViewById(R.id.coordinator_layout), test, Snackbar.LENGTH_LONG);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(getResources().getColor(color));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+        snackbar.show();
+
     }
 }
