@@ -50,6 +50,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         holder.currentItem = mTextNotes.get(position);
+
+        String title = holder.currentItem.getTitle();
+        if (title.length() > 20) {
+            holder.noteTitleView.setSingleLine(false);
+        }
+
         holder.noteTitleView.setText(holder.currentItem.getTitle());
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
