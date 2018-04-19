@@ -12,9 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.R;
-import com.ashiana.zlifno.alder.data.Note;
+import com.ashiana.zlifno.alder.data.TextNote;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.victorminerva.widget.edittext.AutofitEdittext;
@@ -27,9 +28,9 @@ public class AddTextNoteFragment extends Fragment {
     private ChangeNoteIntent changeNoteIntent;
 
     public interface ChangeNoteIntent {
-        void addNote(Note note);
+        void addNote(TextNote textNote);
 
-        void saveNote(Note note);
+        void saveNote(TextNote textNote);
 
         void titleEmpty();
     }
@@ -39,27 +40,28 @@ public class AddTextNoteFragment extends Fragment {
     private AutofitEdittext titleEditText;
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
-    private Note current;
+    private TextNote current;
     public static boolean viaBack;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_note, container, false);
+        initSpeedDial();
 
         viaBack = false;
 
         titleEditText = rootView.findViewById(R.id.note_title);
-
+        TextView noteTimeTextView = rootView.findViewById(R.id.note_time);
         noteContentEditText = rootView.findViewById(R.id.note_content);
-        noteContentEditText.setTextColor(Color.WHITE);
 
         if (current != null) {
             titleEditText.setText(current.getTitle());
             noteContentEditText.setText(current.getContent());
+            noteTimeTextView.setText(current.getTimeCreated());
+        } else {
+            noteTimeTextView.setText(getCurrentDateTime());
         }
-
-        initSpeedDial();
 
         return rootView;
     }
@@ -88,9 +90,7 @@ public class AddTextNoteFragment extends Fragment {
                     String noteTitle = titleEditText.getText().toString();
                     String noteContent = noteContentEditText.getText().toString();
 
-                    SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
-
-                    Note toSend = new Note(noteTitle, noteContent, "Time created: " + dateFromat.format(new Date()));
+                    TextNote toSend = new TextNote(noteTitle, noteContent, getCurrentDateTime());
 
                     changeNoteIntent.addNote(toSend);
                 } else {
@@ -130,6 +130,11 @@ public class AddTextNoteFragment extends Fragment {
         }
     }
 
+    private String getCurrentDateTime() {
+        SimpleDateFormat dateFromat = new SimpleDateFormat("MM/dd/yyyy  hh:mm  aa");
+        return dateFromat.format(new Date());
+    }
+
     private void showSnackBar(String test, int color) {
         Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.add_note_layout), test, Snackbar.LENGTH_LONG)
                 .setAction("Action", null);
@@ -139,7 +144,6 @@ public class AddTextNoteFragment extends Fragment {
     }
 
     public void putArguments(Bundle args) {
-        current = (Note) args.getSerializable("current");
+        current = (TextNote) args.getSerializable("current");
     }
-
 }

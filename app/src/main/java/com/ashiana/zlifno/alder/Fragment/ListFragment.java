@@ -2,7 +2,6 @@ package com.ashiana.zlifno.alder.Fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,11 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Activity.ListActivity;
 import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
+import com.ashiana.zlifno.alder.data.TextNote;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
-import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -34,12 +32,10 @@ public class ListFragment extends Fragment {
     public interface MainIntents {
         void newNote();
 
-        void updateNote(Note note);
+        void updateNote(TextNote textNote);
     }
 
     private View rootView;
-    private ListActivity listActivity;
-    public static final int NOTE_VIEW_ACTIVITY_REQUEST_CODE = 1;
 
     private ListViewModel listViewModel;
     private SpeedDialView speedDialView;
@@ -141,7 +137,7 @@ public class ListFragment extends Fragment {
 
                         checkScroll();
 
-                        showSnackBar("Note deleted", android.R.color.holo_orange_dark);
+                        showSnackBar("TextNote deleted", android.R.color.holo_orange_dark);
                         listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                         adapter.deleteNote(viewHolder.getAdapterPosition());
                     }
@@ -151,58 +147,27 @@ public class ListFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public static void updateNote(Note note) {
-        intents.updateNote(note);
+    public static void updateNote(TextNote textNote) {
+        intents.updateNote(textNote);
     }
 
-    public void addNote(Note note) {
-        Log.v("Alder", "Changing note");
-        isNewTitle = note.getTitle();
-        isNewTime = note.getTimeCreated();
-        Log.v("Adler", "Adding new note " + isNewTitle);
-        listViewModel.insertNote(note);
+    public void addNote(TextNote textNote) {
+        Log.v("Alder", "Changing textNote");
+        isNewTitle = textNote.getTitle();
+        isNewTime = textNote.getTimeCreated();
+        Log.v("Adler", "Adding new textNote " + isNewTitle);
+        listViewModel.insertNote(textNote);
 
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
         adapter.notifyItemInserted(listSize);
-        showSnackBar("New note added", R.color.colorAccent);
+        showSnackBar("New textNote added", R.color.colorAccent);
     }
 
-    public void saveNote(Note note) {
-        listViewModel.updateNote(note);
+    public void saveNote(TextNote textNote) {
+        listViewModel.updateNote(textNote);
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
         adapter.notifyItemChanged(listSize);
-        showSnackBar("Note saved", R.color.colorAccent);
     }
-
-//        if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-//            if (data.hasExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA)) {
-//                listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA));
-//                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-//                adapter.notifyItemInserted(listSize);
-//                showSnackBar("Note updated", R.color.colorAccent);
-//            } else if (data.hasExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA)) {
-//                Note note = (Note) data.getSerializableExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA);
-//                isNewTitle = note.getTitle();
-//                isNewTime = note.getTimeCreated();
-//                Log.v("Alder", "Inserting note " + note.getTitle());
-//                listViewModel.insertNote(note);
-//
-//                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-//                adapter.notifyItemInserted(listSize);
-//                showSnackBar("Note made", R.color.colorAccent);
-//            }
-//
-//        } else if (resultCode == RESULT_CANCELED) {
-//            if (!AddTextNoteFragment.viaBack) {
-//                showSnackBar("Title can't be empty", android.R.color.holo_red_light);
-//                AddTextNoteFragment.viaBack = false;
-//            }
-//        }
-//        // Close fab after activity return
-//        if (speedDialView.isOpen()) {
-//            speedDialView.close();
-//        }
-
 
     public void checkScroll() {
         if (!(recyclerView.computeHorizontalScrollRange() > recyclerView.getWidth())) {
@@ -230,8 +195,8 @@ public class ListFragment extends Fragment {
         speedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_arrow_drop_up_white_24dp)
                         .setLabel("Coming soon")
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorAccent))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorAccentLight))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelColor(Color.WHITE)
                         .create()
         );

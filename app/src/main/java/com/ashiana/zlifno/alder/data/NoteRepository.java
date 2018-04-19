@@ -13,7 +13,7 @@ import java.util.List;
 public class NoteRepository {
 
     private NoteDao noteDao;
-    private LiveData<List<Note>> notesList;
+    private LiveData<List<TextNote>> notesList;
 
     public NoteRepository(Application application) {
         NoteRoomDatabase database = NoteRoomDatabase.getDatabase(application);
@@ -21,15 +21,15 @@ public class NoteRepository {
         notesList = noteDao.getAllNotes();
     }
 
-    public LiveData<List<Note>> getNotesList() {
+    public LiveData<List<TextNote>> getNotesList() {
         return notesList;
     }
 
-    public void updateNote(Note note) {
-        new updateAsyncTask(noteDao).execute(note);
+    public void updateNote(TextNote textNote) {
+        new updateAsyncTask(noteDao).execute(textNote);
     }
 
-    private static class updateAsyncTask extends AsyncTask<Note, Void, Void> {
+    private static class updateAsyncTask extends AsyncTask<TextNote, Void, Void> {
         private NoteDao asynTaskNoteDao;
 
         updateAsyncTask(NoteDao dao) {
@@ -37,19 +37,19 @@ public class NoteRepository {
         }
 
         @Override
-        protected Void doInBackground(Note... notes) {
+        protected Void doInBackground(TextNote... textNotes) {
             Log.v("Alder", "REPO: Started updating note in background");
-            asynTaskNoteDao.updateNote(notes[0]);
+            asynTaskNoteDao.updateNote(textNotes[0]);
             return null;
         }
     }
 
-    public void insertNote(Note note) {
-        note.setPosition(notesList.getValue().size() + 1);
-        new insertAsyncTask(noteDao).execute(note);
+    public void insertNote(TextNote textNote) {
+        textNote.setPosition(notesList.getValue().size() + 1);
+        new insertAsyncTask(noteDao).execute(textNote);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Note, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<TextNote, Void, Void> {
 
         private NoteDao asyncTaskNoteDao;
 
@@ -58,32 +58,32 @@ public class NoteRepository {
         }
 
         @Override
-        protected Void doInBackground(final Note... params) {
+        protected Void doInBackground(final TextNote... params) {
             Log.v("Alder", "REPO: Started adding note in background");
             asyncTaskNoteDao.insertNote(params[0]);
             return null;
         }
     }
 
-    public void deleteNote(Note note) {
+    public void deleteNote(TextNote textNote) {
 
-        new deleteAsyncTask(noteDao, notesList.getValue()).execute(note);
+        new deleteAsyncTask(noteDao, notesList.getValue()).execute(textNote);
 
     }
 
-    private static class deleteAsyncTask extends AsyncTask<Note, Void, Void> {
+    private static class deleteAsyncTask extends AsyncTask<TextNote, Void, Void> {
         private NoteDao asyncTaskNoteDao;
-        private List<Note> notes;
+        private List<TextNote> textNotes;
 
-        deleteAsyncTask(NoteDao dao, List<Note> notes) {
+        deleteAsyncTask(NoteDao dao, List<TextNote> textNotes) {
             asyncTaskNoteDao = dao;
-            this.notes = notes;
+            this.textNotes = textNotes;
         }
 
         @Override
-        protected Void doInBackground(final Note... params) {
+        protected Void doInBackground(final TextNote... params) {
             asyncTaskNoteDao.deleteNote(params[0]);
-            Note next = asyncTaskNoteDao.getNoteByPos(params[0].getPosition() + 1);
+            TextNote next = asyncTaskNoteDao.getNoteByPos(params[0].getPosition() + 1);
             if (next != null) {
                 moveNotePosUp(next.getPosition());
             }
@@ -91,8 +91,8 @@ public class NoteRepository {
         }
 
         private void moveNotePosUp(int firstItemPos) {
-            Note current;
-            for (int i = firstItemPos; i <= notes.size(); i++) {
+            TextNote current;
+            for (int i = firstItemPos; i <= textNotes.size(); i++) {
                 current = asyncTaskNoteDao.getNoteByPos(i);
                 current.setPosition(i - 1);
                 asyncTaskNoteDao.updateNote(current);
@@ -100,32 +100,32 @@ public class NoteRepository {
         }
     }
 
-    // Note moved up
-    public void moveNote(Note holdingNote, Note destNote, ListViewModel model) {
+    // TextNote moved up
+    public void moveNote(TextNote holdingTextNote, TextNote destTextNote, ListViewModel model) {
         model.inProgress = true;
         synchronized (this) {
-            new moveNoteAsyncTask(noteDao, holdingNote, destNote, model).execute();
+            new moveNoteAsyncTask(noteDao, holdingTextNote, destTextNote, model).execute();
         }
     }
 
     private static class moveNoteAsyncTask extends AsyncTask<Void, Void, Void> {
         private NoteDao noteDao;
-        private Note holdingNote;
-        private Note destNote;
+        private TextNote holdingTextNote;
+        private TextNote destTextNote;
         private ListViewModel model;
 
-        moveNoteAsyncTask(NoteDao noteDao, Note holdingNote, Note destNote, ListViewModel model) {
+        moveNoteAsyncTask(NoteDao noteDao, TextNote holdingTextNote, TextNote destTextNote, ListViewModel model) {
             this.noteDao = noteDao;
-            this.holdingNote = holdingNote;
-            this.destNote = destNote;
+            this.holdingTextNote = holdingTextNote;
+            this.destTextNote = destTextNote;
             this.model = model;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
-            int fromPosition = holdingNote.getPosition();
-            int toPosition = destNote.getPosition();
+            int fromPosition = holdingTextNote.getPosition();
+            int toPosition = destTextNote.getPosition();
 
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
@@ -143,14 +143,14 @@ public class NoteRepository {
         }
 
         private void swap(int firstPos, int secondPos) {
-            Note firstNote = noteDao.getNoteByPos(firstPos);
-            Note secondNote = noteDao.getNoteByPos(secondPos);
+            TextNote firstTextNote = noteDao.getNoteByPos(firstPos);
+            TextNote secondTextNote = noteDao.getNoteByPos(secondPos);
 
-            firstNote.setPosition(secondPos);
-            secondNote.setPosition(firstPos);
+            firstTextNote.setPosition(secondPos);
+            secondTextNote.setPosition(firstPos);
 
-            noteDao.updateNote(firstNote);
-            noteDao.updateNote(secondNote);
+            noteDao.updateNote(firstTextNote);
+            noteDao.updateNote(secondTextNote);
         }
     }
 }

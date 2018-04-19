@@ -12,17 +12,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.Fragment.ListFragment;
-import com.ashiana.zlifno.alder.data.Note;
+import com.ashiana.zlifno.alder.data.TextNote;
 import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
 
     private final LayoutInflater mInflater;
-    private List<Note> mNotes; // Cached copy of notes
+    private List<TextNote> mTextNotes; // Cached copy of notes
     private Context context;
 
     public NoteListAdapter(Context context) {
@@ -30,8 +31,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         this.context = context;
     }
 
-    public void setNotes(List<Note> words) {
-        mNotes = words;
+    public void setNotes(List<TextNote> words) {
+        mTextNotes = words;
         Log.v("Alder", "Adapter: Item count is " + getItemCount());
         notifyDataSetChanged();
     }
@@ -46,12 +47,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
-        holder.currentItem = mNotes.get(position);
+        holder.currentItem = mTextNotes.get(position);
         holder.noteTitleView.setText(holder.currentItem.getTitle());
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
-        if (mNotes.get(position).getTitle().equals(ListFragment.isNewTitle) &&
-                mNotes.get(position).getTimeCreated().equals(ListFragment.isNewTime)) {
+        if (mTextNotes.get(position).getTitle().equals(ListFragment.isNewTitle) &&
+                mTextNotes.get(position).getTimeCreated().equals(ListFragment.isNewTime)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -71,7 +72,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         }
 
         holder.setItemClickListener((view, position1) -> {
-            Note current = mNotes.get(position1);
+            TextNote current = mTextNotes.get(position1);
 
             ListFragment.updateNote(current);
         });
@@ -81,8 +82,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (mNotes != null)
-            return mNotes.size();
+        if (mTextNotes != null)
+            return mTextNotes.size();
         else return 0;
     }
 
@@ -91,30 +92,32 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         notifyItemRemoved(position);
     }
 
-    public Note getNote(int position) {
-        return mNotes.get(position);
+    public TextNote getNote(int position) {
+        return mTextNotes.get(position);
     }
 }
 
 class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @BindView(R.id.card_note_title)
     public TextView noteTitleView;
-    @BindView(R.id.card_time_created)
+    @BindView(R.id.card_note_time_text)
     public TextView noteTimeCreatedView;
 
     public View parent;
 
-    public Note currentItem;
+    public TextNote currentItem;
     ItemClickListener itemClickListener;
 
     public NoteViewHolder(View itemView) {
         super(itemView);
 
+        ButterKnife.bind(itemView);
+
         parent = itemView;
         noteTitleView = itemView.findViewById(R.id.card_note_title);
         noteTitleView.setInputType(0);
 
-        noteTimeCreatedView = itemView.findViewById(R.id.card_time_created);
+        noteTimeCreatedView = itemView.findViewById(R.id.card_note_time_text);
         noteTimeCreatedView.setInputType(0);
 
         itemView.setOnClickListener(this);
@@ -122,7 +125,7 @@ class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-//            Note note = mNotes.get(getAdapterPosition());
+//            TextNote note = mTextNotes.get(getAdapterPosition());
 //            showSnackBar(note.getTitle());
         itemClickListener.onItemClick(v, getAdapterPosition());
     }

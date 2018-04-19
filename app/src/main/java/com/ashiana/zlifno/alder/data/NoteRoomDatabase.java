@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 // Makes the database using the entity
-@Database(entities = {Note.class}, version = 3)
+@Database(entities = {TextNote.class}, version = 4)
 public abstract class NoteRoomDatabase extends RoomDatabase {
 
     public abstract NoteDao noteDao();

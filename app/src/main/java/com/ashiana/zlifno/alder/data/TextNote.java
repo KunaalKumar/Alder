@@ -10,10 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 // Defines columns to add to database
-@Entity(tableName = "note_table")
-public class Note implements Serializable {
+@Entity(tableName = "note_text_table")
+public class TextNote implements Serializable {
 
-    public Note(@NonNull String title, String content, String timeCreated) {
+    public TextNote(@NonNull String title, String content, String timeCreated) {
         this.title = title;
         this.content = content;
         this.timeCreated = timeCreated;

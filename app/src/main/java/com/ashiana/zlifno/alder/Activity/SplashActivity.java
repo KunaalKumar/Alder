@@ -44,4 +44,9 @@ public class SplashActivity extends AwesomeSplash {
     public void animationsFinished() {
         startActivity(new Intent(SplashActivity.this, ListActivity.class));
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
