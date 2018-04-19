@@ -70,10 +70,7 @@ public class AddTextNoteFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String transitionName = args.getString("transitionName");
             TextNote textNote = (TextNote) args.getSerializable("current");
-            titleEditText.setTransitionName(transitionName);
-//        noteTimeTextView.setTransitionName(transitionName);
             current = textNote;
         }
 

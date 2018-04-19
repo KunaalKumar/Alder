@@ -78,7 +78,7 @@ public class ListFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new NoteListAdapter(getContext(), this);
+        adapter = new NoteListAdapter(getContext());
         recyclerView.setAdapter(adapter);
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
         setLiveDataObserver();

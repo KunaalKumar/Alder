@@ -24,13 +24,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
     private final LayoutInflater mInflater;
     private List<TextNote> mTextNotes; // Cached copy of notes
-    private Context context;
-    private ListFragment fragment;
 
-    public NoteListAdapter(Context context, ListFragment fragment) {
+    public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-        this.context = context;
-        this.fragment = fragment;
     }
 
     public void setNotes(List<TextNote> words) {
@@ -60,7 +56,6 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
         holder.noteTitleView.setTransitionName("transition" + position);
-//        holder.noteTimeCreatedView.setTransitionName("transition" + position);
 
         if (mTextNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
@@ -130,7 +125,6 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
             ListFragment.updateNote(current, getAdapterPosition(), v);
 
-//            fragment.openMovieDetailFragment(getAdapterPosition(), v.findViewById(R.id.movieImage));
         }
 
     }
