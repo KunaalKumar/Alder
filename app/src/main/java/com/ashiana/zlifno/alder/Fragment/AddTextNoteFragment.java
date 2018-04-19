@@ -68,6 +68,15 @@ public class AddTextNoteFragment extends Fragment {
         noteTimeTextView = rootView.findViewById(R.id.note_time);
         noteContentEditText = rootView.findViewById(R.id.note_content);
 
+        Bundle args = getArguments();
+        if (args != null) {
+            String transitionName = args.getString("transitionName");
+            TextNote textNote = (TextNote) args.getSerializable("current");
+            titleEditText.setTransitionName(transitionName);
+//        noteTimeTextView.setTransitionName(transitionName);
+            current = textNote;
+        }
+
         if (current != null) {
             titleEditText.setText(current.getTitle());
             noteContentEditText.setText(current.getContent());
@@ -109,6 +118,10 @@ public class AddTextNoteFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public static AddTextNoteFragment newInstance() {
+        return new AddTextNoteFragment();
     }
 
     private void initSpotlights() {
@@ -221,7 +234,4 @@ public class AddTextNoteFragment extends Fragment {
         snackbar.show();
     }
 
-    public void putArguments(Bundle args) {
-        current = (TextNote) args.getSerializable("current");
-    }
 }

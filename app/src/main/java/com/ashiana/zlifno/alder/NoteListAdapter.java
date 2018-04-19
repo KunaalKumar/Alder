@@ -20,15 +20,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
+public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<TextNote> mTextNotes; // Cached copy of notes
     private Context context;
+    private ListFragment fragment;
 
-    public NoteListAdapter(Context context) {
+    public NoteListAdapter(Context context, ListFragment fragment) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.fragment = fragment;
     }
 
     public void setNotes(List<TextNote> words) {
@@ -51,8 +53,10 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
         holder.noteTitleView.setText(holder.currentItem.getTitle());
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
-        if (mTextNotes.get(position).getTitle().equals(ListFragment.isNewTitle) &&
-                mTextNotes.get(position).getTimeCreated().equals(ListFragment.isNewTime)) {
+        holder.noteTitleView.setTransitionName("transition" + position);
+//        holder.noteTimeCreatedView.setTransitionName("transition" + position);
+
+        if (mTextNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -66,16 +70,9 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
                 }
 
             }.start();
-
-            ListFragment.isNewTitle = null;
-            ListFragment.isNewTime = null;
+            ListFragment.isNewNote = null;
         }
 
-        holder.setItemClickListener((view, position1) -> {
-            TextNote current = mTextNotes.get(position1);
-
-            ListFragment.updateNote(current);
-        });
     }
 
     // getItemCount() is called many times, and when it is first called,
@@ -95,44 +92,40 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     public TextNote getNote(int position) {
         return mTextNotes.get(position);
     }
-}
 
-class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    @BindView(R.id.card_note_title)
-    public TextView noteTitleView;
-    @BindView(R.id.card_note_time_text)
-    public TextView noteTimeCreatedView;
+    class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.card_note_title)
+        public TextView noteTitleView;
+        @BindView(R.id.card_note_time_text)
+        public TextView noteTimeCreatedView;
 
-    public View parent;
+        public View parent;
 
-    public TextNote currentItem;
-    ItemClickListener itemClickListener;
+        public TextNote currentItem;
 
-    public NoteViewHolder(View itemView) {
-        super(itemView);
+        public NoteViewHolder(View itemView) {
+            super(itemView);
 
-        ButterKnife.bind(itemView);
+            ButterKnife.bind(itemView);
 
-        parent = itemView;
-        noteTitleView = itemView.findViewById(R.id.card_note_title);
-        noteTitleView.setInputType(0);
+            parent = itemView;
+            noteTitleView = itemView.findViewById(R.id.card_note_title);
+            noteTitleView.setInputType(0);
 
-        noteTimeCreatedView = itemView.findViewById(R.id.card_note_time_text);
-        noteTimeCreatedView.setInputType(0);
+            noteTimeCreatedView = itemView.findViewById(R.id.card_note_time_text);
+            noteTimeCreatedView.setInputType(0);
 
-        itemView.setOnClickListener(this);
-    }
+            itemView.setOnClickListener(this);
+        }
 
-    @Override
-    public void onClick(View v) {
-//            TextNote note = mTextNotes.get(getAdapterPosition());
-//            showSnackBar(note.getTitle());
-        itemClickListener.onItemClick(v, getAdapterPosition());
-    }
+        @Override
+        public void onClick(View v) {
+            TextNote current = mTextNotes.get(getAdapterPosition());
 
-    public void setItemClickListener(ItemClickListener ic)
+            ListFragment.updateNote(current, getAdapterPosition(), v);
 
-    {
-        this.itemClickListener = ic;
+//            fragment.openMovieDetailFragment(getAdapterPosition(), v.findViewById(R.id.movieImage));
+        }
+
     }
 }

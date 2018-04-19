@@ -6,22 +6,25 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
 import com.ashiana.zlifno.alder.Fragment.ListFragment;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.TextNote;
-import com.takusemba.spotlight.Spotlight;
 
 public class ListActivity extends AppCompatActivity implements ListFragment.MainIntents, AddTextNoteFragment.ChangeNoteIntent {
 
     private ListFragment listFragment;
+    private FragmentManager fragmentManager;
     private SharedPreferences prefs;
 //    private SharedPreferences.Editor editor;
 
@@ -36,7 +39,35 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
 //        editor.clear();
 //        editor.apply();
 
-        listFragment = (ListFragment) getSupportFragmentManager().findFragmentById(R.id.root_activity);
+        fragmentManager = getSupportFragmentManager();
+//        listFragment = (ListFragment) fragmentManager.findFragmentById(R.id.root_activity);
+        listFragment = ListFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.root_activity, listFragment)
+                .commit();
+    }
+
+    public void showFragmentWithTransition(Fragment current, Fragment newFragment, String tag, View sharedView, String sharedElementName) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // check if the fragment is in back stack
+        boolean fragmentPopped = fragmentManager.popBackStackImmediate(tag, 0);
+        if (fragmentPopped) {
+            // fragment is popped from backStack
+        } else {
+            current.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+            current.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+
+            newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.default_transition));
+            newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+
+            ViewCompat.setTransitionName(sharedView, sharedElementName);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.root_activity, newFragment);
+            fragmentTransaction.addToBackStack(tag);
+            fragmentTransaction.addSharedElement(sharedView, sharedElementName);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -81,26 +112,29 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
 
     // Called on touch
     @Override
-    public void updateNote(TextNote textNote) {
+    public void updateNote(TextNote textNote, int position, View v) {
 //        changeBarColors(R.color.colorAccent);
 
-        Bundle args = new Bundle();
-        args.putSerializable("current", textNote);
-
         AddTextNoteFragment fragment = new AddTextNoteFragment();
-        fragment.putArguments(args);
+        Bundle args = new Bundle();
+        args.putString("transitionName", "transition" + position);
+        args.putSerializable("current", textNote);
+        fragment.setArguments(args);
 
-        if (getSupportFragmentManager().findFragmentByTag("AddTextNote") == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.root_activity, fragment)
-                    .addToBackStack("AddTextNote")
-                    .commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.root_activity, fragment, "AddTextNote");
-        }
-
+        showFragmentWithTransition(listFragment, fragment, "AddTextNote", v, "transition" + position);
+//        if (getSupportFragmentManager().findFragmentByTag("AddTextNote") == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.root_activity, fragment)
+//                    .addToBackStack("AddTextNote")
+//                    .commit();
+//        } else {
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.root_activity, fragment, "AddTextNote");
+//        }
     }
+
+
+//            ((MainActivity) context).showFragmentWithTransition(this, movieDetail, "movieDetail", view, "transition" + position);
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

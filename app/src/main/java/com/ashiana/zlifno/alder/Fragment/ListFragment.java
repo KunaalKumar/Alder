@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
@@ -45,7 +44,7 @@ public class ListFragment extends Fragment {
     public interface MainIntents {
         void newNote();
 
-        void updateNote(TextNote textNote);
+        void updateNote(TextNote textNote, int position, View v);
     }
 
     private View rootView;
@@ -55,8 +54,7 @@ public class ListFragment extends Fragment {
     private RecyclerView recyclerView;
     private NoteListAdapter adapter;
     private int listSize;
-    public static String isNewTitle;
-    public static String isNewTime;
+    public static TextNote isNewNote;
 
     // For spotlight
     SimpleTarget fabSpotlight, animSpotlight, fabSpotlight2, fabSpotlight3, noteCardSpotlight;
@@ -65,19 +63,22 @@ public class ListFragment extends Fragment {
 
     }
 
+    public static ListFragment newInstance() {
+        return new ListFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        isNewTitle = null;
-        isNewTime = null;
+        isNewNote = null;
 
         recyclerView = rootView.findViewById(R.id.notes_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new NoteListAdapter(getContext());
+        adapter = new NoteListAdapter(getContext(), this);
         recyclerView.setAdapter(adapter);
         listViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
         setLiveDataObserver();
@@ -194,8 +195,8 @@ public class ListFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public static void updateNote(TextNote textNote) {
-        intents.updateNote(textNote);
+    public static void updateNote(TextNote textNote, int position, View v) {
+        intents.updateNote(textNote, position, v);
     }
 
     public void addNote(TextNote textNote) {
@@ -214,9 +215,8 @@ public class ListFragment extends Fragment {
                     })
                     .start(); // start Spotlight
         }
-        isNewTitle = textNote.getTitle();
-        isNewTime = textNote.getTimeCreated();
-        Log.v("Adler", "Adding new textNote " + isNewTitle);
+        isNewNote = textNote;
+        Log.v("Adler", "Adding new textNote " + textNote.getTitle());
         listViewModel.insertNote(textNote);
 
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
@@ -356,5 +356,4 @@ public class ListFragment extends Fragment {
                 })
                 .start(); // start Spotlight
     }
-
 }
