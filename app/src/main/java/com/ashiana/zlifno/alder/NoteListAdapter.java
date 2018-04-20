@@ -56,6 +56,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
 
         holder.noteTitleView.setTransitionName("transition" + position);
+//        holder.noteTimeCreatedView.setTransitionName("transition" + position);
 
         if (mTextNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
