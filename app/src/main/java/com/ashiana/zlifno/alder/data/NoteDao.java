@@ -17,23 +17,23 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface NoteDao {
 
     @Insert(onConflict = IGNORE)
-    void insertNote(TextNote textNote);
+    void insertNote(Note note);
 
-    @Query("DELETE FROM note_text_table")
+    @Query("DELETE FROM note_table")
     void deleteAll();
 
     @Update(onConflict = REPLACE)
-    void updateNote(TextNote textNote);
+    void updateNote(Note note);
 
     @Delete()
-    void deleteNote(TextNote textNote);
+    void deleteNote(Note note);
 
-    @Query("DELETE FROM note_text_table WHERE id = (:id)")
+    @Query("DELETE FROM note_table WHERE id = (:id)")
     void deleteNoteById(int id);
 
-    @Query("SELECT * FROM note_text_table ORDER BY position ASC")
-    LiveData<List<TextNote>> getAllNotes();
+    @Query("SELECT * FROM note_table ORDER BY position ASC")
+    LiveData<List<Note>> getAllNotes();
 
-    @Query("SELECT * FROM note_text_table WHERE position = (:pos)")
-    TextNote getNoteByPos(int pos);
+    @Query("SELECT * FROM note_table WHERE position = (:pos)")
+    Note getNoteByPos(int pos);
 }

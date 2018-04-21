@@ -6,7 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.ashiana.zlifno.alder.data.TextNote;
+import com.ashiana.zlifno.alder.data.Note;
 import com.ashiana.zlifno.alder.data.NoteRepository;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ListViewModel extends AndroidViewModel {
 
     private NoteRepository repository;
-    private LiveData<List<TextNote>> notesList;
+    private LiveData<List<Note>> notesList;
     public boolean inProgress;
 
     public ListViewModel(Application application) {
@@ -25,35 +25,35 @@ public class ListViewModel extends AndroidViewModel {
         inProgress = false;
     }
 
-    public LiveData<List<TextNote>> getNotesList() {
+    public LiveData<List<Note>> getNotesList() {
         return notesList;
     }
 
-    public void insertNote(TextNote textNote) {
+    public void insertNote(Note note) {
 
-        Log.v("Alder", "ListViewModel : Sending \"" + textNote.getTitle() + "\" to repository");
+        Log.v("Alder", "ListViewModel : Sending \"" + note.title + "\" to repository");
 
-        repository.insertNote(textNote);
+        repository.insertNote(note);
     }
 
-    public void deleteNote(TextNote textNote) {
-        Log.v("Alder", "ListViewModel : Deleting textNote id - " + textNote.getTitle());
+    public void deleteNote(Note note) {
+        Log.v("Alder", "ListViewModel : Deleting note id - " + note.title);
 
-        repository.deleteNote(textNote);
+        repository.deleteNote(note);
     }
 
-    public void moveNote(TextNote holdingTextNote, TextNote destinationTextNote, RecyclerView.Adapter adapter) {
+    public void moveNote(Note holdingNote, Note destinationNote, RecyclerView.Adapter adapter) {
 
         Log.v("Alder", "ListViewModel : Moving note to new position");
 
-        repository.moveNote(holdingTextNote, destinationTextNote, this);
+        repository.moveNote(holdingNote, destinationNote, this);
     }
 
-    public void updateNote(TextNote textNote) {
+    public void updateNote(Note note) {
 
-        Log.v("Alder", "ListViewModel : Updating textNote");
+        Log.v("Alder", "ListViewModel : Updating note");
 
-        repository.updateNote(textNote);
+        repository.updateNote(note);
     }
 
 

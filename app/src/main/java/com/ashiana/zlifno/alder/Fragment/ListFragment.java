@@ -1,12 +1,24 @@
 package com.ashiana.zlifno.alder.Fragment;
 
+import android.Manifest;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.CountDownTimer;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -19,16 +31,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashiana.zlifno.alder.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
-import com.ashiana.zlifno.alder.data.TextNote;
+import com.ashiana.zlifno.alder.data.Note;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.takusemba.spotlight.SimpleTarget;
 import com.takusemba.spotlight.Spotlight;
+
+import java.io.File;
+import java.util.Objects;
+
+import static android.Manifest.permission_group.CAMERA;
 
 public class ListFragment extends Fragment {
 
@@ -41,10 +60,17 @@ public class ListFragment extends Fragment {
     public static String TAG_FINISHED_SPOTLIGHT2 = "FINISHED_SPOTLIGHT2";
     public static String TAG_FINISHED_FINAL_SPOTLIGHT = "FINISHED_FINAL_SPOTLIGHT";
 
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    Uri outPutfileUri;
+
     public interface MainIntents {
         void newNote();
 
-        void updateNote(TextNote textNote, int position, View v);
+        void updateNote(Note note, int position, View v);
     }
 
     private View rootView;
@@ -54,7 +80,7 @@ public class ListFragment extends Fragment {
     private RecyclerView recyclerView;
     private NoteListAdapter adapter;
     private int listSize;
-    public static TextNote isNewNote;
+    public static Note isNewNote;
 
     // For spotlight
     SimpleTarget fabSpotlight, animSpotlight, fabSpotlight2, fabSpotlight3, noteCardSpotlight;
@@ -185,7 +211,7 @@ public class ListFragment extends Fragment {
 
                         checkScroll();
 
-                        showSnackBar("TextNote deleted", android.R.color.holo_orange_dark);
+                        showSnackBar("Note deleted", android.R.color.holo_orange_dark);
                         listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                         adapter.deleteNote(viewHolder.getAdapterPosition());
                     }
@@ -195,13 +221,13 @@ public class ListFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    public static void updateNote(TextNote textNote, int position, View v) {
-        intents.updateNote(textNote, position, v);
+    public static void updateNote(Note note, int position, View v) {
+        intents.updateNote(note, position, v);
     }
 
-    public void addNote(TextNote textNote) {
+    public void addNote(Note note) {
 
-        Log.v("Alder", "Changing textNote");
+        Log.v("Alder", "Changing note");
         if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
             Spotlight.with(getActivity())
                     .setOverlayColor(ContextCompat.getColor(getContext(), R.color.background)) // background overlay color
@@ -215,17 +241,17 @@ public class ListFragment extends Fragment {
                     })
                     .start(); // start Spotlight
         }
-        isNewNote = textNote;
-        Log.v("Adler", "Adding new textNote " + textNote.getTitle());
-        listViewModel.insertNote(textNote);
+        isNewNote = note;
+        Log.v("Adler", "Adding new note " + note.title);
+        listViewModel.insertNote(note);
 
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
         adapter.notifyItemInserted(listSize);
-        showSnackBar("New textNote added", R.color.colorAccent);
+        showSnackBar("New note added", R.color.colorAccent);
     }
 
-    public void saveNote(TextNote textNote) {
-        listViewModel.updateNote(textNote);
+    public void saveNote(Note note) {
+        listViewModel.updateNote(note);
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
         adapter.notifyItemChanged(listSize);
     }
@@ -254,8 +280,8 @@ public class ListFragment extends Fragment {
 
         speedDialView = rootView.findViewById(R.id.speedDial);
         speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_arrow_drop_up_white_24dp)
-                        .setLabel("Coming soon")
+                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.thumb_drawable)
+                        .setLabel("Add an image note")
                         .setFabBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelColor(Color.WHITE)
@@ -265,7 +291,6 @@ public class ListFragment extends Fragment {
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public void onMainActionSelected() {
-
                 intents.newNote();
             }
 
@@ -277,14 +302,67 @@ public class ListFragment extends Fragment {
         speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
             switch (speedDialActionItem.getId()) {
                 case R.id.fab_add:
-                    showSnackBar("More coming soon!", R.color.colorPrimaryDark);
+                    pickImage();
 
-                    speedDialView.close();
                     return false; // true to keep the Speed Dial open
                 default:
                     return false;
             }
         });
+    }
+
+    private final int REQUEST_CAMERA = 1;
+    private final int REQUEST_IMAGE = 2;
+
+    public void pickImage() {
+
+        if (Objects.requireNonNull(getContext()).checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            if (Objects.requireNonNull(getActivity()).shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                showSnackBar("Camera permission needed for image note", R.color.colorPrimary);
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
+            } else {
+                try {
+                    openCamera();
+                } catch (Exception e) {
+
+                }
+            }
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                showSnackBar("Permission not granted", android.R.color.holo_red_dark);
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                showSnackBar("Got image", R.color.colorAccentLight);
+                Bundle extras = data.getExtras();
+                Uri imageUri = (Uri) extras.get("data");
+                showSnackBar(imageUri.toString(), R.color.colorAccentDark);
+            }
+        }
     }
 
     @Override

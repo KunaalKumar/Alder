@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.R;
-import com.ashiana.zlifno.alder.data.TextNote;
+import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.takusemba.spotlight.SimpleTarget;
@@ -35,9 +35,9 @@ public class AddTextNoteFragment extends Fragment {
     private ChangeNoteIntent changeNoteIntent;
 
     public interface ChangeNoteIntent {
-        void addNote(TextNote textNote);
+        void addNote(Note note);
 
-        void saveNote(TextNote textNote);
+        void saveNote(Note note);
 
         void titleEmpty();
     }
@@ -48,7 +48,7 @@ public class AddTextNoteFragment extends Fragment {
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
     private TextView noteTimeTextView;
-    private TextNote current;
+    private Note current;
     public static boolean viaBack;
 
     private SharedPreferences sharedPreferences;
@@ -70,14 +70,14 @@ public class AddTextNoteFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            TextNote textNote = (TextNote) args.getSerializable("current");
-            current = textNote;
+            Note note = (Note) args.getSerializable("current");
+            current = note;
         }
 
         if (current != null) {
-            titleEditText.setText(current.getTitle());
-            noteContentEditText.setText(current.getContent());
-            noteTimeTextView.setText(current.getTimeCreated());
+            titleEditText.setText(current.title);
+            noteContentEditText.setText(current.content);
+            noteTimeTextView.setText(current.timeCreated);
         } else {
             noteTimeTextView.setText(getCurrentDateTime());
         }
@@ -159,7 +159,7 @@ public class AddTextNoteFragment extends Fragment {
         speedDialView = rootView.findViewById(R.id.speedDialAddMenu);
 
         speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.save_note, R.drawable.ic_arrow_drop_down_white_24dp)
+                new SpeedDialActionItem.Builder(R.id.save_note, R.drawable.ic_arrow_drop_up_white_24dp)
                         .setLabel("More coming soon!")
                         .setFabBackgroundColor(getResources().getColor(R.color.colorAccent))
                         .setLabelBackgroundColor(getResources().getColor(R.color.colorAccent))
@@ -178,12 +178,12 @@ public class AddTextNoteFragment extends Fragment {
                     String noteTitle = titleEditText.getText().toString();
                     String noteContent = noteContentEditText.getText().toString();
 
-                    TextNote toSend = new TextNote(noteTitle, noteContent, getCurrentDateTime());
+                    Note toSend = new Note(noteTitle, noteContent, getCurrentDateTime());
 
                     changeNoteIntent.addNote(toSend);
                 } else {
-                    current.setTitle(titleEditText.getText().toString());
-                    current.setContent(noteContentEditText.getText().toString());
+                    current.title = titleEditText.getText().toString();
+                    current.content = noteContentEditText.getText().toString();
                     changeNoteIntent.saveNote(current);
                 }
 //

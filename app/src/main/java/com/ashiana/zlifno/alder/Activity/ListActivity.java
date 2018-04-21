@@ -1,12 +1,16 @@
 package com.ashiana.zlifno.alder.Activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,7 +19,7 @@ import android.widget.TextView;
 import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
 import com.ashiana.zlifno.alder.Fragment.ListFragment;
 import com.ashiana.zlifno.alder.R;
-import com.ashiana.zlifno.alder.data.TextNote;
+import com.ashiana.zlifno.alder.data.Note;
 
 public class ListActivity extends AppCompatActivity implements ListFragment.MainIntents, AddTextNoteFragment.ChangeNoteIntent {
 
@@ -83,12 +87,12 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
 
     // Called on touch
     @Override
-    public void updateNote(TextNote textNote, int position, View v) {
+    public void updateNote(Note note, int position, View v) {
 
         AddTextNoteFragment fragment = new AddTextNoteFragment();
         Bundle args = new Bundle();
         args.putString("transitionName", "transition" + position);
-        args.putSerializable("current", textNote);
+        args.putSerializable("current", note);
         fragment.setArguments(args);
 
         if (getSupportFragmentManager().findFragmentByTag("AddTextNote") == null) {
@@ -108,24 +112,24 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
         imm.hideSoftInputFromWindow(findViewById(R.id.root_activity).getWindowToken(), 0);
     }
 
-    // New textNote to add
+    // New note to add
     @Override
-    public void addNote(TextNote textNote) {
+    public void addNote(Note note) {
 //        changeBarColors(R.color.colorPrimary);
         listFragment.closeFAB();
         hideKeyboard();
         getSupportFragmentManager().popBackStack();
-        listFragment.addNote(textNote);
+        listFragment.addNote(note);
     }
 
-    // Update contents of given textNote
+    // Update contents of given note
     @Override
-    public void saveNote(TextNote textNote) {
+    public void saveNote(Note note) {
 //        changeBarColors(R.color.colorPrimary);
         listFragment.closeFAB();
         hideKeyboard();
         getSupportFragmentManager().popBackStack();
-        listFragment.saveNote(textNote);
+        listFragment.saveNote(note);
     }
 
     @Override
@@ -134,11 +138,16 @@ public class ListActivity extends AppCompatActivity implements ListFragment.Main
         hideKeyboard();
         getSupportFragmentManager().popBackStack();
         showSnackBar("Title can't be empty", android.R.color.holo_red_light);
-        Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
 
-// Vibrate for 1 seconds
-        assert v != null;
-        v.vibrate(1000);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.VIBRATE}, 1);
+        } else {
+            Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 1 seconds
+            assert v != null;
+            v.vibrate(1000);
+        }
     }
 
     private void showSnackBar(String test, int color) {

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.Fragment.ListFragment;
-import com.ashiana.zlifno.alder.data.TextNote;
+import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
@@ -23,14 +23,14 @@ import butterknife.ButterKnife;
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
 
     private final LayoutInflater mInflater;
-    private List<TextNote> mTextNotes; // Cached copy of notes
+    private List<Note> mNotes; // Cached copy of notes
 
     public NoteListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setNotes(List<TextNote> words) {
-        mTextNotes = words;
+    public void setNotes(List<Note> words) {
+        mNotes = words;
         Log.v("Alder", "Adapter: Item count is " + getItemCount());
         notifyDataSetChanged();
     }
@@ -45,19 +45,19 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
-        holder.currentItem = mTextNotes.get(position);
+        holder.currentItem = mNotes.get(position);
 
-        String title = holder.currentItem.getTitle();
+        String title = holder.currentItem.title;
         if (title.length() > 20) {
             holder.noteTitleView.setSingleLine(false);
         }
 
-        holder.noteTitleView.setText(holder.currentItem.getTitle());
-        holder.noteTimeCreatedView.setText(holder.currentItem.getTimeCreated());
+        holder.noteTitleView.setText(holder.currentItem.title);
+        holder.noteTimeCreatedView.setText(holder.currentItem.timeCreated);
 
         holder.noteTitleView.setTransitionName("transition" + position);
 
-        if (mTextNotes.equals(ListFragment.isNewNote)) {
+        if (mNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -80,8 +80,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
     // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (mTextNotes != null)
-            return mTextNotes.size();
+        if (mNotes != null)
+            return mNotes.size();
         else return 0;
     }
 
@@ -90,8 +90,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         notifyItemRemoved(position);
     }
 
-    public TextNote getNote(int position) {
-        return mTextNotes.get(position);
+    public Note getNote(int position) {
+        return mNotes.get(position);
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -102,7 +102,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
         public View parent;
 
-        public TextNote currentItem;
+        public Note currentItem;
 
         public NoteViewHolder(View itemView) {
             super(itemView);
@@ -121,7 +121,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
         @Override
         public void onClick(View v) {
-            TextNote current = mTextNotes.get(getAdapterPosition());
+            Note current = mNotes.get(getAdapterPosition());
 
             ListFragment.updateNote(current, getAdapterPosition(), v);
 
