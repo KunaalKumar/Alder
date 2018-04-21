@@ -183,11 +183,11 @@ public class ListFragment extends Fragment {
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
 
+                        checkScroll();
+
                         showSnackBar("TextNote deleted", android.R.color.holo_orange_dark);
                         listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
                         adapter.deleteNote(viewHolder.getAdapterPosition());
-
-                        checkScroll();
                     }
                 };
 
@@ -227,7 +227,7 @@ public class ListFragment extends Fragment {
     public void saveNote(TextNote textNote) {
         listViewModel.updateNote(textNote);
         recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(listSize);
     }
 
     public void checkScroll() {

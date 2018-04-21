@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.TextNote;
@@ -46,10 +44,9 @@ public class AddTextNoteFragment extends Fragment {
 
     View rootView;
 
-    private TextView titleEditText;
+    private AutofitEdittext titleEditText;
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
-    AutofitEdittext autofitEdittext;
     private TextView noteTimeTextView;
     private TextNote current;
     public static boolean viaBack;
@@ -68,8 +65,6 @@ public class AddTextNoteFragment extends Fragment {
         viaBack = false;
 
         titleEditText = rootView.findViewById(R.id.note_title);
-        titleEditText.setSingleLine(false);
-        autofitEdittext = rootView.findViewById(R.id.note_title_hidden);
         noteTimeTextView = rootView.findViewById(R.id.note_time);
         noteContentEditText = rootView.findViewById(R.id.note_content);
 
@@ -81,7 +76,6 @@ public class AddTextNoteFragment extends Fragment {
 
         if (current != null) {
             titleEditText.setText(current.getTitle());
-            autofitEdittext.setText(titleEditText.getText());
             noteContentEditText.setText(current.getContent());
             noteTimeTextView.setText(current.getTimeCreated());
         } else {
@@ -120,21 +114,44 @@ public class AddTextNoteFragment extends Fragment {
             }
         });
 
-        titleEditText.setOnClickListener(v -> {
-            titleEditText.setVisibility(View.GONE);
-            autofitEdittext.setVisibility(View.VISIBLE);
-            autofitEdittext.requestFocus();
-
-            final InputMethodManager inputMethodManager = (InputMethodManager) getContext()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.showSoftInput(autofitEdittext, InputMethodManager.SHOW_IMPLICIT);
-        });
-
         return rootView;
     }
 
     public static AddTextNoteFragment newInstance() {
         return new AddTextNoteFragment();
+    }
+
+    private void initSpotlights() {
+        titleSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(400f) // radius of the Target
+                .setTitle("Note Title") // title
+                .setDescription("Enter a title for your first note") // description
+                .build();
+        noteContentSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(noteContentEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(1000f) // radius of the Target
+                .setTitle("Note Content") // title
+                .setDescription("This is where you can add the content for your note") // description
+                .build();
+        noteTimeSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(noteTimeTextView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(500f) // radius of the Target
+                .setTitle("Time Created") // title
+                .setDescription("Here you can see the time your note was created") // description
+                .build();
+        saveFabSpotlight = new SimpleTarget.Builder(getActivity())
+                .setPoint(speedDialView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(200f) // radius of the Target
+                .setTitle("Save Button") // title
+                .setDescription("Click here to save your note") // description
+                .build();
+        titleSpotlight2 = new SimpleTarget.Builder(getActivity())
+                .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
+                .setRadius(400) // radius of the Target
+                .setTitle("Alright") // title
+                .setDescription("Let's make your first note, enter the title and click the save button") // description
+                .build();
     }
 
     private void initSpeedDial() {
@@ -154,21 +171,22 @@ public class AddTextNoteFragment extends Fragment {
             @Override
             public void onMainActionSelected() {
                 Log.v("Alder", "Clicked Save");
-                if (TextUtils.isEmpty(autofitEdittext.getText())) {
+                if (TextUtils.isEmpty(titleEditText.getText())) {
                     Log.v("Alder", "Title is empty");
                     changeNoteIntent.titleEmpty();
                 } else if (current == null) {
-                    String noteTitle = autofitEdittext.getText().toString();
+                    String noteTitle = titleEditText.getText().toString();
                     String noteContent = noteContentEditText.getText().toString();
 
                     TextNote toSend = new TextNote(noteTitle, noteContent, getCurrentDateTime());
 
                     changeNoteIntent.addNote(toSend);
                 } else {
-                    current.setTitle(autofitEdittext.getText().toString());
+                    current.setTitle(titleEditText.getText().toString());
                     current.setContent(noteContentEditText.getText().toString());
                     changeNoteIntent.saveNote(current);
                 }
+//
             }
 
             @Override
@@ -211,39 +229,6 @@ public class AddTextNoteFragment extends Fragment {
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(color);
         snackbar.show();
-    }
-
-    private void initSpotlights() {
-        titleSpotlight = new SimpleTarget.Builder(getActivity())
-                .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
-                .setRadius(400f) // radius of the Target
-                .setTitle("Note Title") // title
-                .setDescription("Enter a title for your first note") // description
-                .build();
-        noteContentSpotlight = new SimpleTarget.Builder(getActivity())
-                .setPoint(noteContentEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
-                .setRadius(1000f) // radius of the Target
-                .setTitle("Note Content") // title
-                .setDescription("This is where you can add the content for your note") // description
-                .build();
-        noteTimeSpotlight = new SimpleTarget.Builder(getActivity())
-                .setPoint(noteTimeTextView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
-                .setRadius(500f) // radius of the Target
-                .setTitle("Time Created") // title
-                .setDescription("Here you can see the time your note was created") // description
-                .build();
-        saveFabSpotlight = new SimpleTarget.Builder(getActivity())
-                .setPoint(speedDialView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
-                .setRadius(200f) // radius of the Target
-                .setTitle("Save Button") // title
-                .setDescription("Click here to save your note") // description
-                .build();
-        titleSpotlight2 = new SimpleTarget.Builder(getActivity())
-                .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
-                .setRadius(400) // radius of the Target
-                .setTitle("Alright") // title
-                .setDescription("Let's make your first note, enter the title and click the save button") // description
-                .build();
     }
 
 }

@@ -33,32 +33,10 @@
         android:layout_below="@id/toolbar"
         android:elevation="0dp">
 
-        <TextView
+        <com.victorminerva.widget.edittext.AutofitEdittext
             android:id="@+id/note_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:background="@color/colorPrimaryDark"
-            android:elevation="8dp"
-            android:hint="@string/hint_title"
-            android:inputType="textCapSentences"
-            android:minHeight="100dp"
-            android:padding="8dp"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textColorHighlight="@color/colorPrimary"
-            android:textSize="44sp"
-            android:theme="@style/note_card_title"
-            app:layout_constraintBottom_toTopOf="@id/scrollView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.victorminerva.widget.edittext.AutofitEdittext
-            android:id="@+id/note_title_hidden"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:background="@color/colorPrimaryDark"
@@ -67,14 +45,11 @@
             android:inputType="textCapSentences"
             android:maxLength="50"
             android:maxLines="2"
-            android:minHeight="100dp"
             android:padding="8dp"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textColorHighlight="@color/colorPrimary"
             android:textSize="44sp"
-            android:theme="@style/note_card_title"
-            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/scrollView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/note_title_hidden">
+            app:layout_constraintTop_toBottomOf="@+id/note_title">
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/note_content"
