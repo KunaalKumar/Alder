@@ -15,7 +15,6 @@ public class AddImageNoteFragment extends Fragment {
     ImageView imageView;
 
     @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_image, container, false);
         imageView = rootView.findViewById(R.id.imageView);

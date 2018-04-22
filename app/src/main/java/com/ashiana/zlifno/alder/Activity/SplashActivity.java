@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.ashiana.zlifno.alder.Fragment.ListFragment;
 import com.ashiana.zlifno.alder.R;
 import com.daimajia.androidanimations.library.Techniques;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;

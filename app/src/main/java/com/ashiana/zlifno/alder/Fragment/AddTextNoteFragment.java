@@ -42,6 +42,7 @@ public class AddTextNoteFragment extends Fragment {
         void titleEmpty();
     }
 
+
     View rootView;
 
     private AutofitEdittext titleEditText;

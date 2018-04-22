@@ -1,9 +1,13 @@
 package com.ashiana.zlifno.alder;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Fragment.ListFragment;
+import com.ashiana.zlifno.alder.Activity.ListActivity;
+import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 
@@ -23,9 +28,11 @@ import butterknife.ButterKnife;
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteViewHolder> {
 
     private final LayoutInflater mInflater;
+    private Context context;
     private List<Note> mNotes; // Cached copy of notes
 
     public NoteListAdapter(Context context) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -57,7 +64,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
         holder.noteTitleView.setTransitionName("transition" + position);
 
-        if (mNotes.equals(ListFragment.isNewNote)) {
+        if (mNotes.equals(ListActivity.isNewNote)) {
             RippleBackground rippleBackground = holder.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -71,8 +78,17 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
                 }
 
             }.start();
-            ListFragment.isNewNote = null;
+            ListActivity.isNewNote = null;
         }
+
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                Note current = mNotes.get(position);
+                ListActivity.updateNote(current, position, view);
+            }
+        });
 
     }
 
@@ -100,6 +116,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
         @BindView(R.id.card_note_time_text)
         public TextView noteTimeCreatedView;
 
+        ItemClickListener itemClickListener;
+
         public View parent;
 
         public Note currentItem;
@@ -121,10 +139,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
 
         @Override
         public void onClick(View v) {
-            Note current = mNotes.get(getAdapterPosition());
+//            Note current = mNotes.get(getAdapterPosition());
 
-            ListFragment.updateNote(current, getAdapterPosition(), v);
+            itemClickListener.onItemClick(v, getAdapterPosition());
+        }
 
+        public void setItemClickListener(ItemClickListener ic) {
+            this.itemClickListener = ic;
         }
 
     }

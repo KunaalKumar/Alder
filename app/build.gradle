@@ -82,6 +82,8 @@ dependencies {
     // https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.8.2'
 
+    implementation 'com.gongwen:swipeback:1.0.2'
+
 }
 
 
