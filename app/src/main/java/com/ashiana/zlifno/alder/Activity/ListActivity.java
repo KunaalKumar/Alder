@@ -57,8 +57,6 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
     public static String TAG_FINISHED_SPOTLIGHT2 = "FINISHED_SPOTLIGHT2";
     public static String TAG_FINISHED_FINAL_SPOTLIGHT = "FINISHED_FINAL_SPOTLIGHT";
 
-    public static final int NOTE_VIEW_ACTIVITY_REQUEST_CODE = 1;
-
     private final int REQUEST_CAMERA = 1;
     private final int REQUEST_IMAGE = 2;
 
@@ -330,15 +328,9 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            showSnackBar("Worked", R.color.colorPrimary);
-        }
         if (requestCode == REQUEST_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
-                showSnackBar("Got image", R.color.colorAccentLight);
-                Bundle extras = data.getExtras();
-                Uri imageUri = (Uri) extras.get("data");
-                showSnackBar(imageUri.toString(), R.color.colorAccentDark);
+                showSnackBar("Got image but still need to implement", R.color.colorAccentLight);
             }
         }
     }
@@ -377,7 +369,6 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
 
         AddTextNoteFragment fragment = new AddTextNoteFragment();
         Bundle args = new Bundle();
-        args.putString("transitionName", "transition" + position);
         args.putSerializable("current", note);
         fragment.setArguments(args);
 
@@ -464,7 +455,7 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
         snackbar = Snackbar.make(this.findViewById(R.id.coordinator_layout), test, Snackbar.LENGTH_LONG);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(getResources().getColor(color));
-        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(getResources().getColor(android.R.color.white));
         snackbar.show();
     }
