@@ -22,4 +22,5 @@ Android note taking app following material design guidelines
 * https://github.com/TakuSemba/Spotlight
 * https://github.com/dlew/joda-time-android
 * https://github.com/ikew0ng/SwipeBackLayout
-* Icon made by https://www.flaticon.com/authors/dinosoftlabs from www.flaticon.com (Modified)
+* Icon made by https://www.flaticon.com/authors/dinosoftlabs from www.flaticon.com
+  * Modified using https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html
