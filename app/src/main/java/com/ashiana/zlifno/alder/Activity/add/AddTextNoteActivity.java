@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder.Fragment;
+package com.ashiana.zlifno.alder.Activity.add;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -34,14 +33,16 @@ import java.util.Locale;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
-public class AddTextNoteFragment extends SwipeBackActivity {
+public class AddTextNoteActivity extends SwipeBackActivity {
 
-    private AutofitEdittext titleEditText;
+    private TextView titleEditText;
+    private AutofitEdittext hiddenTitleEditText;
     private EditText noteContentEditText;
     private SpeedDialView speedDialView;
     private TextView noteTimeTextView;
     private Note current;
     public static boolean viaBack;
+    public static boolean viaSwipe;
 
     public static final String EXTRA_CURRENT_NOTE = "com.ashiana.zlifno.alder.CURRENT_NOTE";
     public static final String SAVE_NOTE_EXTRA = "com.ashiana.zlifno.alder.SAVE_NOTE";
@@ -61,7 +62,10 @@ public class AddTextNoteFragment extends SwipeBackActivity {
 
         initSpeedDial();
 
+        changeBarColors(R.color.colorPrimaryDark);
+
         viaBack = false;
+        viaSwipe = true;
 
         final Intent intent = getIntent();
 
@@ -69,10 +73,10 @@ public class AddTextNoteFragment extends SwipeBackActivity {
             current = (Note) intent.getSerializableExtra(EXTRA_CURRENT_NOTE);
         }
 
-        titleEditText = (AutofitEdittext) findViewById(R.id.note_title);
+        titleEditText = (TextView) findViewById(R.id.note_title);
+        hiddenTitleEditText = (AutofitEdittext) findViewById(R.id.note_title_hidden);
         noteTimeTextView = (TextView) findViewById(R.id.note_time);
         noteContentEditText = (EditText) findViewById(R.id.note_content);
-
         if (current != null) {
             titleEditText.setText(current.title);
             noteContentEditText.setText(current.content);
@@ -85,6 +89,12 @@ public class AddTextNoteFragment extends SwipeBackActivity {
 
         View rootView = findViewById(R.id.add_note_layout);
 
+        titleEditText.setOnClickListener(v -> {
+            hiddenTitleEditText.setText(titleEditText.getText());
+            hiddenTitleEditText.setVisibility(View.VISIBLE);
+            titleEditText.setVisibility(View.INVISIBLE);
+        });
+
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -95,8 +105,8 @@ public class AddTextNoteFragment extends SwipeBackActivity {
                 if (!sharedPreferences.getBoolean(TAG_FINISHED_ADD_NOTE_SPOTLIGHT, false)) {
 
                     // callback when Spotlight ends
-                    Spotlight.with(AddTextNoteFragment.this)
-                            .setOverlayColor(ContextCompat.getColor(AddTextNoteFragment.this, R.color.background)) // background overlay color
+                    Spotlight.with(AddTextNoteActivity.this)
+                            .setOverlayColor(ContextCompat.getColor(AddTextNoteActivity.this, R.color.background)) // background overlay color
                             .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
                             .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
                             .setTargets(titleSpotlight, noteContentSpotlight, noteTimeSpotlight, saveFabSpotlight, titleSpotlight2)
@@ -119,36 +129,42 @@ public class AddTextNoteFragment extends SwipeBackActivity {
 
     }
 
-    public static AddTextNoteFragment newInstance() {
-        return new AddTextNoteFragment();
+
+    private void changeBarColors(int color) {
+        getWindow().setStatusBarColor(getResources().getColor(color));
+        getWindow().setNavigationBarColor(getResources().getColor(color));
+    }
+
+    public static AddTextNoteActivity newInstance() {
+        return new AddTextNoteActivity();
     }
 
     private void initSpotlights() {
-        titleSpotlight = new SimpleTarget.Builder(AddTextNoteFragment.this)
+        titleSpotlight = new SimpleTarget.Builder(AddTextNoteActivity.this)
                 .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
                 .setRadius(400f) // radius of the Target
                 .setTitle("Note Title") // title
                 .setDescription("Enter a title for your first note") // description
                 .build();
-        noteContentSpotlight = new SimpleTarget.Builder(AddTextNoteFragment.this)
+        noteContentSpotlight = new SimpleTarget.Builder(AddTextNoteActivity.this)
                 .setPoint(noteContentEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
                 .setRadius(1000f) // radius of the Target
                 .setTitle("Note Content") // title
                 .setDescription("This is where you can add the content for your note") // description
                 .build();
-        noteTimeSpotlight = new SimpleTarget.Builder(AddTextNoteFragment.this)
+        noteTimeSpotlight = new SimpleTarget.Builder(AddTextNoteActivity.this)
                 .setPoint(noteTimeTextView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
                 .setRadius(500f) // radius of the Target
                 .setTitle("Time Created") // title
                 .setDescription("Here you can see the time your note was created") // description
                 .build();
-        saveFabSpotlight = new SimpleTarget.Builder(AddTextNoteFragment.this)
+        saveFabSpotlight = new SimpleTarget.Builder(AddTextNoteActivity.this)
                 .setPoint(speedDialView) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
                 .setRadius(200f) // radius of the Target
                 .setTitle("Save Button") // title
                 .setDescription("Click here to save your note") // description
                 .build();
-        titleSpotlight2 = new SimpleTarget.Builder(AddTextNoteFragment.this)
+        titleSpotlight2 = new SimpleTarget.Builder(AddTextNoteActivity.this)
                 .setPoint(titleEditText) // position of the Target. setPoint(Point point), setPoint(View view) will work too.
                 .setRadius(400) // radius of the Target
                 .setTitle("Alright") // title
@@ -176,9 +192,10 @@ public class AddTextNoteFragment extends SwipeBackActivity {
                 Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(titleEditText.getText())) {
                     Log.v("Alder", "Title is empty");
+                    viaSwipe = false;
                     setResult(RESULT_CANCELED, saveNoteIntent);
                 } else if (current == null) {
-                    String noteTitle = titleEditText.getText().toString();
+                    String noteTitle = hiddenTitleEditText.getText().toString();
                     String noteContent = noteContentEditText.getText().toString();
 
                     DateTime dateTime = DateTime.now();
@@ -189,7 +206,7 @@ public class AddTextNoteFragment extends SwipeBackActivity {
                     saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
                     setResult(RESULT_OK, saveNoteIntent);
                 } else {
-                    current.title = titleEditText.getText().toString();
+                    current.title = hiddenTitleEditText.getText().toString();
                     current.content = noteContentEditText.getText().toString();
                     saveNoteIntent.putExtra(UPDATE_NOTE_EXTRA, current);
                     setResult(RESULT_OK, saveNoteIntent);

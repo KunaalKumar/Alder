@@ -29,7 +29,7 @@
 
         </activity>
         <activity
-            android:name=".Fragment.AddTextNoteFragment"
+            android:name=".Activity.add.AddTextNoteActivity"
             android:parentActivityName=".Activity.ListActivity"
             android:windowSoftInputMode="stateHidden">
 

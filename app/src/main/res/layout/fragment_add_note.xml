@@ -10,7 +10,7 @@
     android:clickable="true"
     android:focusable="true"
     android:theme="@style/add_note"
-    tools:context=".Fragment.AddTextNoteFragment">
+    tools:context=".Activity.add.AddTextNoteActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -34,12 +34,33 @@
         android:layout_below="@id/toolbar"
         android:elevation="0dp">
 
-        <com.victorminerva.widget.edittext.AutofitEdittext
+        <TextView
             android:id="@+id/note_title"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:background="@color/colorPrimaryDark"
+            android:elevation="8dp"
+            android:hint="@string/hint_title"
+            android:inputType="textCapSentences"
+            android:singleLine="false"
+            android:maxLines="2"
+            android:padding="8dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textColorHighlight="@color/colorPrimary"
+            android:textSize="44sp"
+            app:layout_constraintBottom_toTopOf="@id/scrollView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.victorminerva.widget.edittext.AutofitEdittext
+            android:id="@+id/note_title_hidden"
+            android:layout_width="0dp"
+            android:visibility="invisible"
+            android:layout_height="100dp"
             android:background="@color/colorPrimaryDark"
             android:elevation="8dp"
             android:hint="@string/hint_title"

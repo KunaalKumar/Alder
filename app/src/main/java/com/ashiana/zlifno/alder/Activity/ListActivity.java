@@ -9,12 +9,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +26,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
+import com.ashiana.zlifno.alder.Activity.add.AddTextNoteActivity;
 import com.ashiana.zlifno.alder.recycler_view_components.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
@@ -40,7 +38,6 @@ import com.takusemba.spotlight.Spotlight;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ListActivity extends AppCompatActivity {
@@ -270,7 +267,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onMainActionSelected() {
 
-                Intent intent = new Intent(ListActivity.this, AddTextNoteFragment.class);
+                Intent intent = new Intent(ListActivity.this, AddTextNoteActivity.class);
 
                 startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
             }
@@ -333,12 +330,12 @@ public class ListActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data.hasExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA)) {
-                listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA));
+            if (data.hasExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA)) {
+                listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA));
                 recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
                 adapter.notifyItemInserted(listSize);
-            } else if (data.hasExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA)) {
-                Note note = (Note) data.getSerializableExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA);
+            } else if (data.hasExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA)) {
+                Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
                 isNewNote = note;
                 Log.v("Alder", "Inserting note " + note.title);
                 listViewModel.insertNote(note);
@@ -351,12 +348,14 @@ public class ListActivity extends AppCompatActivity {
                 showSnackBar("Got image but still need to implement", R.color.colorAccentLight);
             }
         } else if (resultCode == RESULT_CANCELED) {
-            if (!AddTextNoteFragment.viaBack) {
-                showSnackBar("Note cancelled", android.R.color.holo_red_light);
-                AddTextNoteFragment.viaBack = false;
+            if (AddTextNoteActivity.viaSwipe) {
+                Log.v("Alder", "Note cancelled");
+            } else if (!AddTextNoteActivity.viaBack) {
+                showSnackBar("Title can't be empty", android.R.color.holo_red_light);
+                AddTextNoteActivity.viaBack = false;
             }
         }
-        
+
         closeFAB();
     }
 
@@ -383,17 +382,11 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    private void changeBarColors(int color) {
-        getWindow().setStatusBarColor(getResources().getColor(color));
-        getWindow().setNavigationBarColor(getResources().getColor(color));
-        findViewById(R.id.my_toolbar).setBackgroundColor(getResources().getColor(color));
-    }
-
     // Called on touch
     public static void updateNote(View view, Note note, Context context) {
 
-        Intent intent = new Intent(context, AddTextNoteFragment.class);
-        intent.putExtra(AddTextNoteFragment.EXTRA_CURRENT_NOTE, note);
+        Intent intent = new Intent(context, AddTextNoteActivity.class);
+        intent.putExtra(AddTextNoteActivity.EXTRA_CURRENT_NOTE, note);
 
         ((Activity) context).startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
     }

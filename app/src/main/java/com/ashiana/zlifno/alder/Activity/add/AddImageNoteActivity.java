@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder.Fragment;
+package com.ashiana.zlifno.alder.Activity.add;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import com.ashiana.zlifno.alder.R;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
-public class AddImageNoteFragment extends SwipeBackActivity {
+public class AddImageNoteActivity extends SwipeBackActivity {
     View rootView;
     ImageView imageView;
 
