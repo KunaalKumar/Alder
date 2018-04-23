@@ -255,8 +255,8 @@ public class ListActivity extends AppCompatActivity {
 
         speedDialView = findViewById(R.id.speedDial);
         speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.thumb_drawable)
-                        .setLabel("Add an image note")
+                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_photo_camera_white_24dp)
+                        .setLabel("Image note")
                         .setFabBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelColor(Color.WHITE)
@@ -280,7 +280,8 @@ public class ListActivity extends AppCompatActivity {
         speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
             switch (speedDialActionItem.getId()) {
                 case R.id.fab_add:
-                    pickImage();
+                    showSnackBar("Coming soon", R.color.colorAccentDark);
+//                    pickImage();
 
                     return false; // true to keep the Speed Dial open
                 default:

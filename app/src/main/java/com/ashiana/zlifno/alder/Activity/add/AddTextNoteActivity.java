@@ -7,12 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -66,6 +68,13 @@ public class AddTextNoteActivity extends SwipeBackActivity {
 
         viaBack = false;
         viaSwipe = true;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         final Intent intent = getIntent();
 
@@ -137,6 +146,12 @@ public class AddTextNoteActivity extends SwipeBackActivity {
 
     }
 
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     private void changeBarColors(int color) {
         getWindow().setStatusBarColor(getResources().getColor(color));
