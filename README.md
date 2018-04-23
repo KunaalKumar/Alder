@@ -1,5 +1,5 @@
-# ToDo
-Android To-Do app following material design guidelines
+# Alder
+Android note taking app following material design guidelines
 
 
 <b> Credits </b>
