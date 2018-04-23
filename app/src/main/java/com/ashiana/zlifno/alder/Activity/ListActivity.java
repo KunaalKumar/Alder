@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
@@ -30,7 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
-import com.ashiana.zlifno.alder.NoteListAdapter;
+import com.ashiana.zlifno.alder.recycler_view_components.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.ashiana.zlifno.alder.view_model.ListViewModel;
@@ -38,6 +37,8 @@ import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.takusemba.spotlight.SimpleTarget;
 import com.takusemba.spotlight.Spotlight;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.Objects;
 
@@ -70,6 +71,7 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        JodaTimeAndroid.init(this);
         isNewNote = null;
         sharedPreferences = getSharedPreferences("alder_prefs", Context.MODE_PRIVATE);
 

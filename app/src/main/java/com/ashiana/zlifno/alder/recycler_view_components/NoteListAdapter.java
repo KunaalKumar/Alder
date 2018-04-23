@@ -1,13 +1,9 @@
-package com.ashiana.zlifno.alder;
+package com.ashiana.zlifno.alder.recycler_view_components;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashiana.zlifno.alder.Activity.ListActivity;
-import com.ashiana.zlifno.alder.Fragment.AddTextNoteFragment;
+import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 

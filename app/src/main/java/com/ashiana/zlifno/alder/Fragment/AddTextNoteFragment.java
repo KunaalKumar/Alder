@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,8 +28,16 @@ import com.takusemba.spotlight.SimpleTarget;
 import com.takusemba.spotlight.Spotlight;
 import com.victorminerva.widget.edittext.AutofitEdittext;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddTextNoteFragment extends Fragment {
 
@@ -57,6 +66,8 @@ public class AddTextNoteFragment extends Fragment {
     private SimpleTarget titleSpotlight, noteContentSpotlight, noteTimeSpotlight, saveFabSpotlight, titleSpotlight2;
     public static String TAG_FINISHED_ADD_NOTE_SPOTLIGHT = "FINISHED_ADD_NOTE_SPOTLIGHT";
 
+    private String usFormat = DateTimeFormat.patternForStyle("L-", Locale.US);
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +91,9 @@ public class AddTextNoteFragment extends Fragment {
             noteContentEditText.setText(current.content);
             noteTimeTextView.setText(current.timeCreated);
         } else {
-            noteTimeTextView.setText(getCurrentDateTime());
+            DateTime dateTime = DateTime.now();
+
+            noteTimeTextView.setText(dateTime.toString(usFormat));
         }
 
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -179,7 +192,10 @@ public class AddTextNoteFragment extends Fragment {
                     String noteTitle = titleEditText.getText().toString();
                     String noteContent = noteContentEditText.getText().toString();
 
-                    Note toSend = new Note(noteTitle, noteContent, getCurrentDateTime());
+                    DateTime dateTime = DateTime.now();
+                    String usFormat = DateTimeFormat.patternForStyle("L-", Locale.US);
+
+                    Note toSend = new Note(noteTitle, noteContent, dateTime.toString(usFormat));
 
                     changeNoteIntent.addNote(toSend);
                 } else {

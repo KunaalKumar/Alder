@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder;
+package com.ashiana.zlifno.alder.recycler_view_components;
 
 import android.view.View;
 
