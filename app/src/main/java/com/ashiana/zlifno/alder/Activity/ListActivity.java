@@ -40,9 +40,10 @@ import com.takusemba.spotlight.Spotlight;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.util.List;
 import java.util.Objects;
 
-public class ListActivity extends AppCompatActivity implements AddTextNoteFragment.ChangeNoteIntent {
+public class ListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private NoteListAdapter adapter;
@@ -60,6 +61,7 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
 
     private final int REQUEST_CAMERA = 1;
     private final int REQUEST_IMAGE = 2;
+    public static final int NOTE_VIEW_ACTIVITY_REQUEST_CODE = 1;
 
     public static Note isNewNote;
     public static FragmentManager fragmentManager;
@@ -267,11 +269,10 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public void onMainActionSelected() {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .add(R.id.constraint_layout, new AddTextNoteFragment())
-                        .addToBackStack("AddTextNote")
-                        .commit();
+
+                Intent intent = new Intent(ListActivity.this, AddTextNoteFragment.class);
+
+                startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
             }
 
             @Override
@@ -330,11 +331,33 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE) {
+
+        if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.hasExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA)) {
+                listViewModel.updateNote((Note) data.getSerializableExtra(AddTextNoteFragment.UPDATE_NOTE_EXTRA));
+                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
+                adapter.notifyItemInserted(listSize);
+            } else if (data.hasExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA)) {
+                Note note = (Note) data.getSerializableExtra(AddTextNoteFragment.SAVE_NOTE_EXTRA);
+                isNewNote = note;
+                Log.v("Alder", "Inserting note " + note.title);
+                listViewModel.insertNote(note);
+
+                recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
+                adapter.notifyItemInserted(listSize);
+            }
+        } else if (requestCode == REQUEST_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 showSnackBar("Got image but still need to implement", R.color.colorAccentLight);
             }
+        } else if (resultCode == RESULT_CANCELED) {
+            if (!AddTextNoteFragment.viaBack) {
+                showSnackBar("Note cancelled", android.R.color.holo_red_light);
+                AddTextNoteFragment.viaBack = false;
+            }
         }
+        
+        closeFAB();
     }
 
     @Override
@@ -367,88 +390,18 @@ public class ListActivity extends AppCompatActivity implements AddTextNoteFragme
     }
 
     // Called on touch
-    public static void updateNote(Note note, int position, View v) {
+    public static void updateNote(View view, Note note, Context context) {
 
-        AddTextNoteFragment fragment = new AddTextNoteFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("current", note);
-        fragment.setArguments(args);
+        Intent intent = new Intent(context, AddTextNoteFragment.class);
+        intent.putExtra(AddTextNoteFragment.EXTRA_CURRENT_NOTE, note);
 
-        if (fragmentManager.findFragmentByTag("AddTextNote") == null) {
-            fragmentManager.beginTransaction()
-                    .add(R.id.constraint_layout, fragment)
-                    .addToBackStack("AddTextNote")
-                    .commit();
-        } else {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.constraint_layout, fragment, "AddTextNote");
-        }
+        ((Activity) context).startActivityForResult(intent, NOTE_VIEW_ACTIVITY_REQUEST_CODE);
     }
 
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(findViewById(R.id.constraint_layout).getWindowToken(), 0);
-    }
-
-    // New note to add
-    @Override
-    public void addNote(Note note) {
-//        changeBarColors(R.color.colorPrimary);
-        closeFAB();
-        hideKeyboard();
-        getSupportFragmentManager().popBackStack();
-        Log.v("Alder", "Changing note");
-        if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
-            Spotlight.with(ListActivity.this)
-                    .setOverlayColor(ContextCompat.getColor(ListActivity.this, R.color.background)) // background overlay color
-                    .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
-                    .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
-                    .setTargets(noteCardSpotlight) // set targets. see below for more info
-                    .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
-                    .setOnSpotlightEndedListener(() -> {
-                        editor.putBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, true);
-                        editor.apply();
-                    })
-                    .start(); // start Spotlight
-        }
-        isNewNote = note;
-        Log.v("Adler", "Adding new note " + note.title);
-        listViewModel.insertNote(note);
-
-        recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-        adapter.notifyItemInserted(listSize);
-        showSnackBar("New note added", R.color.colorAccent);
-    }
-
-    // Update contents of given note
-    @Override
-    public void saveNote(Note note) {
-//        changeBarColors(R.color.colorPrimary);
-        closeFAB();
-        hideKeyboard();
-        getSupportFragmentManager().popBackStack();
-        listViewModel.updateNote(note);
-        recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);
-        adapter.notifyItemChanged(listSize);
-    }
-
-    @Override
-    public void titleEmpty() {
-        closeFAB();
-        hideKeyboard();
-        getSupportFragmentManager().popBackStack();
-        showSnackBar("Title can't be empty", android.R.color.holo_red_light);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.VIBRATE}, 1);
-        } else {
-            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 1 seconds
-            assert v != null;
-            v.vibrate(1000);
-        }
     }
 
     private void showSnackBar(String test, int color) {

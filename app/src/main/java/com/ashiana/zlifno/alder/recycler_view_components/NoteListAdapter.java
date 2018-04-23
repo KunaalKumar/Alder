@@ -82,7 +82,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteVi
             public void onItemClick(View view, int position) {
 
                 Note current = mNotes.get(position);
-                ListActivity.updateNote(current, position, view);
+                ListActivity.updateNote(view, current, context);
             }
         });
 

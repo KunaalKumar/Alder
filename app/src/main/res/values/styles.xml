@@ -9,6 +9,7 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 
@@ -26,12 +27,9 @@
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorAccentDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:statusBarColor">@color/colorAccentDark</item>
-        <item name="android:navigationBarColor">@color/colorAccent</item>
     </style>
 
     <style name="note_card_title">
-
         <item name="android:clickable">false</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">36sp</item>

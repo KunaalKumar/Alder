@@ -83,6 +83,7 @@ dependencies {
     // https://github.com/dlew/joda-time-android
     implementation 'net.danlew:android.joda:2.9.9.3'
 
+    implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
 }
 
 

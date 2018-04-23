@@ -28,6 +28,12 @@
             android:windowSoftInputMode="adjustResize">
 
         </activity>
+        <activity
+            android:name=".Fragment.AddTextNoteFragment"
+            android:parentActivityName=".Activity.ListActivity"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
     </application>
 
 </manifest>
