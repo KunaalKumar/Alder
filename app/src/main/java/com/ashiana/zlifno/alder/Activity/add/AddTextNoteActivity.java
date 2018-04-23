@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -21,7 +22,6 @@ import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.takusemba.spotlight.SimpleTarget;
 import com.takusemba.spotlight.Spotlight;
 import com.victorminerva.widget.edittext.AutofitEdittext;
@@ -58,7 +58,7 @@ public class AddTextNoteActivity extends SwipeBackActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_add_note);
+        setContentView(R.layout.fragment_add_text);
 
         initSpeedDial();
 
@@ -75,24 +75,32 @@ public class AddTextNoteActivity extends SwipeBackActivity {
 
         titleEditText = (TextView) findViewById(R.id.note_title);
         hiddenTitleEditText = (AutofitEdittext) findViewById(R.id.note_title_hidden);
+        hiddenTitleEditText.setSingleLine(false);
         noteTimeTextView = (TextView) findViewById(R.id.note_time);
         noteContentEditText = (EditText) findViewById(R.id.note_content);
+
         if (current != null) {
             titleEditText.setText(current.title);
+            hiddenTitleEditText.setText(titleEditText.getText());
             noteContentEditText.setText(current.content);
             noteTimeTextView.setText(current.timeCreated);
         } else {
             DateTime dateTime = DateTime.now();
-
             noteTimeTextView.setText(dateTime.toString(usFormat));
         }
 
         View rootView = findViewById(R.id.add_note_layout);
 
         titleEditText.setOnClickListener(v -> {
-            hiddenTitleEditText.setText(titleEditText.getText());
-            hiddenTitleEditText.setVisibility(View.VISIBLE);
             titleEditText.setVisibility(View.INVISIBLE);
+            if (current != null) {
+                hiddenTitleEditText.setText(titleEditText.getText());
+            }
+            hiddenTitleEditText.setVisibility(View.VISIBLE);
+            hiddenTitleEditText.requestFocus();
+            hiddenTitleEditText.setSelection(hiddenTitleEditText.getText().length());
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         });
 
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -190,7 +198,7 @@ public class AddTextNoteActivity extends SwipeBackActivity {
             public void onMainActionSelected() {
                 Log.v("Alder", "Clicked Save");
                 Intent saveNoteIntent = new Intent();
-                if (TextUtils.isEmpty(titleEditText.getText())) {
+                if (TextUtils.isEmpty(hiddenTitleEditText.getText())) {
                     Log.v("Alder", "Title is empty");
                     viaSwipe = false;
                     setResult(RESULT_CANCELED, saveNoteIntent);
