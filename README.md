@@ -1,17 +1,17 @@
 ![alt text](https://github.com/KunaalKumar/Alder/blob/master/app/src/main/res/drawable/alder_icon.png "Alder")
 # Alder
-___
+
 
 Android note taking app following material design guidelines
 
 ## Features
-___
+
 *  Quick and simple note editor
 *  Material design 
 *  More features coming soon
 
 ## Credits
-___
+
 * https://github.com/victorminerva/AutoResizeEditText
 * https://github.com/rengwuxian/MaterialEditText
 * https://github.com/leinardi/FloatingActionButtonSpeedDial
