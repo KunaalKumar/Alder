@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -88,7 +90,7 @@ public class ListActivity extends AppCompatActivity {
         initSpeedDial();
         View rootView = findViewById(R.id.constraint_layout);
 
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        findViewById(R.id.constraint_layout).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -114,7 +116,6 @@ public class ListActivity extends AppCompatActivity {
 
                     editor.putBoolean(TAG_FINISHED_SPOTLIGHT1, true);
                     editor.apply();
-
                 }
             }
         });
@@ -290,6 +291,7 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void pickImage() {
 
         if (Objects.requireNonNull(ListActivity.this).checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -329,6 +331,20 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
+            Spotlight.with(this)
+                    .setOverlayColor(ContextCompat.getColor(this, R.color.background)) // background overlay color
+                    .setDuration(1000L) // duration of Spotlight emerging and disappearing in ms
+                    .setAnimation(new DecelerateInterpolator(2f)) // animation of Spotlight
+                    .setTargets(noteCardSpotlight) // set targets. see below for more info
+                    .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
+                    .setOnSpotlightEndedListener(() -> {
+                        editor.putBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, true);
+                        editor.apply();
+                    })
+                    .start(); // start Spotlight
+        }
 
         if (requestCode == NOTE_VIEW_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data.hasExtra(AddTextNoteActivity.UPDATE_NOTE_EXTRA)) {
