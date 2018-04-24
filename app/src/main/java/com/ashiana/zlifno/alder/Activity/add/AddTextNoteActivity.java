@@ -130,10 +130,10 @@ public class AddTextNoteActivity extends SwipeBackActivity {
                             .setClosedOnTouchedOutside(true) // set if target is closed when touched outside
                             .setOnSpotlightEndedListener(() -> {
                                 if (sharedPreferences.getBoolean(TAG_FINISHED_ADD_NOTE_SPOTLIGHT, true)) {
-                                    titleEditText.setFocusableInTouchMode(true);
-                                    titleEditText.requestFocus();
+                                    hiddenTitleEditText.setFocusableInTouchMode(true);
+                                    hiddenTitleEditText.requestFocus();
                                     ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-                                            .showSoftInput(titleEditText, InputMethodManager.SHOW_FORCED);
+                                            .showSoftInput(hiddenTitleEditText, InputMethodManager.SHOW_FORCED);
                                 }
                             })
                             .start(); // start Spotlight
