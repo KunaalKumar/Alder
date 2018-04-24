@@ -1,4 +1,4 @@
-![alt text](https://github.com/KunaalKumar/Alder/blob/master/app/src/main/res/drawable/alder_icon.png "Alder")
+![alt text](https://github.com/KunaalKumar/Alder/blob/master/app/src/main/res/drawable/alder_icon.png?raw=true "Alder")
 # Alder
 
 
