@@ -13,10 +13,14 @@ import java.util.Date;
 @Entity(tableName = "note_table")
 public class Note implements Serializable {
 
-    public Note(@NonNull String title, String content, String timeCreated) {
+    public static final int NOTE_TYPE_TEXT = 1;
+    public static final int NOTE_TYPE_IMAGE = 2;
+
+    public Note(@NonNull String title, @NonNull int noteType, String content, String timeCreated) {
         this.title = title;
         this.content = content;
         this.timeCreated = timeCreated;
+        this.noteType = noteType;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -35,5 +39,7 @@ public class Note implements Serializable {
     public int position;
 
     public String imagePath;
+
+    public int noteType;
 
 }

@@ -224,7 +224,7 @@ public class AddTextNoteActivity extends SwipeBackActivity {
                     DateTime dateTime = DateTime.now();
                     String usFormat = DateTimeFormat.patternForStyle("L-", Locale.US);
 
-                    Note toSend = new Note(noteTitle, noteContent, dateTime.toString(usFormat));
+                    Note toSend = new Note(noteTitle, Note.NOTE_TYPE_TEXT, noteContent, dateTime.toString(usFormat));
 
                     saveNoteIntent.putExtra(SAVE_NOTE_EXTRA, toSend);
                     setResult(RESULT_OK, saveNoteIntent);
