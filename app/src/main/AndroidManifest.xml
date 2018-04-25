@@ -14,19 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activity.SplashActivity"
-            android:noHistory="true">
+            android:name=".Activity.ListActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Activity.ListActivity"
-            android:windowSoftInputMode="adjustResize">
-
         </activity>
         <activity
             android:name=".Activity.add.AddTextNoteActivity"
