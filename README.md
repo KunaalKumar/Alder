@@ -14,7 +14,7 @@ Android note taking app following material design guidelines
 
 ## Credits
 
-* [https://github.com/victorminerva/AutoResizeEditText]
+* [https://github.com/victorminerva/AutoResizeEditText] (AutoResizeEditText)
 * https://github.com/rengwuxian/MaterialEditText
 * https://github.com/leinardi/FloatingActionButtonSpeedDial
 * https://github.com/airbnb/lottie-android
