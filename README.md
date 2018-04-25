@@ -14,18 +14,18 @@ Android note taking app following material design guidelines
 
 ## Credits
 
-* [https://github.com/victorminerva/AutoResizeEditText] (AutoResizeEditText)
-* https://github.com/rengwuxian/MaterialEditText
-* https://github.com/leinardi/FloatingActionButtonSpeedDial
-* https://github.com/airbnb/lottie-android
-* http://jakewharton.github.io/butterknife/
-* https://github.com/skyfishjy/android-ripple-background
-* https://github.com/ViksaaSkool/AwesomeSplash
-* https://github.com/TakuSemba/Spotlight
-* https://github.com/dlew/joda-time-android
-* https://github.com/ikew0ng/SwipeBackLayout
-* Icon made by https://www.flaticon.com/authors/dinosoftlabs from www.flaticon.com
-  * Modified using https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html
+* [AutoResizeEditText](https://github.com/victorminerva/AutoResizeEditText)
+* [MaterialEditText](https://github.com/rengwuxian/MaterialEditText)
+* [FloatingActionButtonSpeedDial](https://github.com/leinardi/FloatingActionButtonSpeedDial)
+* [Lottie](https://github.com/airbnb/lottie-android)
+* [Butterknife](http://jakewharton.github.io/butterknife/)
+* [Ripple Background](https://github.com/skyfishjy/android-ripple-background)
+* ~~~[Awesome Splash](https://github.com/ViksaaSkool/AwesomeSplash)~~~
+* [Spotlight](https://github.com/TakuSemba/Spotlight)
+* [Joda-Time](https://github.com/dlew/joda-time-android)
+* [SwipeBackLayout](https://github.com/ikew0ng/SwipeBackLayout)
+* Icon made by [Dinosoftlabs](https://www.flaticon.com/authors/dinosoftlabs) from [FlatIcon](www.flaticon.com)
+  * Modified using [Icons-launcher](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html)
 
 ## Privacy Policy
-http://www.sites.google.com/ashiana.com/alder/home
+[Alder WebPage](http://www.sites.google.com/ashiana.com/alder/home)
