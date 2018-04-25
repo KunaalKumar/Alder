@@ -8,11 +8,13 @@ Android note taking app following material design guidelines
 
 *  Quick and simple note editor
 *  Material design 
+*  Fast scrubbing through list
+*  Open-source
 *  More features coming soon
 
 ## Credits
 
-* https://github.com/victorminerva/AutoResizeEditText
+* [https://github.com/victorminerva/AutoResizeEditText]
 * https://github.com/rengwuxian/MaterialEditText
 * https://github.com/leinardi/FloatingActionButtonSpeedDial
 * https://github.com/airbnb/lottie-android
