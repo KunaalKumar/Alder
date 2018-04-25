@@ -28,4 +28,4 @@ Android note taking app following material design guidelines
   * Modified using [Icons-launcher](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html)
 
 ## Privacy Policy
-[Alder WebPage](http://www.sites.google.com/ashiana.com/alder/home)
+[Alder WebPage](http://www.sites.google.com/ashiana.com/alder)
