@@ -9,6 +9,7 @@ Android note taking app following material design guidelines
 *  Quick and simple note editor
 *  Material design 
 *  Fast scrubbing through list
+*  Focused on design.
 *  Open-source
 *  More features coming soon
 
