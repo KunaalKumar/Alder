@@ -45,22 +45,36 @@ public class NoteRepository {
     }
 
     public void insertNote(Note note) {
-        note.position = notesList.getValue().size() + 1;
-        new insertAsyncTask(noteDao).execute(note);
+//        note.position = notesList.getValue().size() + 1;
+        new insertAsyncTask(noteDao, notesList.getValue().size()).execute(note);
     }
 
     private static class insertAsyncTask extends AsyncTask<Note, Void, Void> {
 
         private NoteDao asyncTaskNoteDao;
+        private int lastPos;
 
-        insertAsyncTask(NoteDao dao) {
+        insertAsyncTask(NoteDao dao, int listSize) {
             asyncTaskNoteDao = dao;
+            this.lastPos = listSize;
         }
 
         @Override
         protected Void doInBackground(final Note... params) {
+            // 1
+            // 3
+            // 4
             Log.v("Alder", "REPO: Started adding note in background");
+            if (asyncTaskNoteDao.getNoteByPos(params[0].position) != null) {
+                Note temp = null;
+                for (int i = params[0].position; i <= lastPos; i++) {
+                    Note insert = asyncTaskNoteDao.getNoteByPos(i);
+                    insert.position = i + 1;
+                    asyncTaskNoteDao.updateNote(insert);
+                }
+            }
             asyncTaskNoteDao.insertNote(params[0]);
+
             return null;
         }
     }
@@ -100,7 +114,6 @@ public class NoteRepository {
         }
     }
 
-    // Note moved up
     public void moveNote(Note holdingNote, Note destNote, ListViewModel model) {
         model.inProgress = true;
         synchronized (this) {

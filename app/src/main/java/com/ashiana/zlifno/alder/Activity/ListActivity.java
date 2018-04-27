@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -236,12 +237,22 @@ public class ListActivity extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
                         checkScroll();
 
-                        showSnackBar("Note deleted", android.R.color.holo_orange_dark);
-                        listViewModel.deleteNote(adapter.getNote(viewHolder.getAdapterPosition()));
+                        Note noteToDelete = adapter.getNote(viewHolder.getAdapterPosition());
+                        int position = noteToDelete.position;
+
+                        listViewModel.deleteNote(noteToDelete);
                         adapter.deleteNote(viewHolder.getAdapterPosition());
+
+
+                        Snackbar.make(findViewById(R.id.coordinator_layout), "Note deleted", Snackbar.LENGTH_INDEFINITE)
+                                .setDuration(5000)
+                                .setAction("UNDO", v -> {
+                                    listViewModel.insertNote(noteToDelete);
+                                    adapter.notifyDataSetChanged();
+                                })
+                                .show();
                     }
                 };
 
@@ -358,6 +369,7 @@ public class ListActivity extends AppCompatActivity {
                 Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
                 isNewNote = note;
                 Log.v("Alder", "Inserting note " + note.title);
+                note.position = listSize + 1;
                 listViewModel.insertNote(note);
 
                 recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);

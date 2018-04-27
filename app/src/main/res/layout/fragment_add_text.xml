@@ -112,6 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:clickable_overlay="true"
+        android:layout_alignParentBottom="true"
         app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior" />
 
     <com.leinardi.android.speeddial.SpeedDialView
