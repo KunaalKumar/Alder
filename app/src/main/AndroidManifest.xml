@@ -26,7 +26,7 @@
         <activity
             android:name=".Activity.add.AddTextNoteActivity"
             android:parentActivityName=".Activity.ListActivity"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden|adjustResize">
 
         </activity>
     </application>

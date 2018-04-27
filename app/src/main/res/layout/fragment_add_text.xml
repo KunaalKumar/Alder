@@ -14,7 +14,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -111,8 +112,8 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:clickable_overlay="true"
         android:layout_alignParentBottom="true"
+        app:clickable_overlay="true"
         app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior" />
 
     <com.leinardi.android.speeddial.SpeedDialView
