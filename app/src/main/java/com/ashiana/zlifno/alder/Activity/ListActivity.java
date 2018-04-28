@@ -73,7 +73,10 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_list);
 
         JodaTimeAndroid.init(this);
@@ -345,7 +348,7 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        
         if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
             Spotlight.with(this)
                     .setOverlayColor(ContextCompat.getColor(this, R.color.background)) // background overlay color
@@ -431,7 +434,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(findViewById(R.id.constraint_layout).getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
     private void showSnackBar(String test, int color) {

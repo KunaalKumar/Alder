@@ -211,6 +211,7 @@ public class AddTextNoteActivity extends SwipeBackActivity {
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public void onMainActionSelected() {
+                hideKeyboard();
                 Log.v("Alder", "Clicked Save");
                 Intent saveNoteIntent = new Intent();
                 if (TextUtils.isEmpty(hiddenTitleEditText.getText())) {
@@ -263,4 +264,11 @@ public class AddTextNoteActivity extends SwipeBackActivity {
         snackbar.show();
     }
 
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(imm).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+    }
+
 }
+
+
