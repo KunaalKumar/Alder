@@ -75,6 +75,8 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9.3'
     // https://github.com/ikew0ng/SwipeBackLayout
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
+    // https://github.com/tyzlmjj/PagerBottomTabStrip
+    implementation 'me.majiajie:pager-bottom-tab-strip:2.2.5'
 }
 
 

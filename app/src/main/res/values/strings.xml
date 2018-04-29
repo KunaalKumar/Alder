@@ -5,4 +5,7 @@
     <string name="hint_title">Title</string>
     <string name="hint_note">Note</string>
     <string name="title">Title</string>
+    <string name="bold">Bold</string>
+    <string name="Italic">Italic</string>
+    <string name="underline">Underline</string>
 </resources>

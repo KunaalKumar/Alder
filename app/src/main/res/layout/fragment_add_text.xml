@@ -37,6 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="4dp"
+            android:focusableInTouchMode="true"
             android:hint="@string/hint_title"
             android:inputType="textMultiLine|textCapWords"
             android:minHeight="100dp"
@@ -44,8 +45,8 @@
             android:paddingStart="16dp"
             android:paddingTop="16dp"
             android:text="Title"
-            android:textColorHint="@color/grey_font"
             android:textColor="@color/colorPrimaryDark"
+            android:textColorHint="@color/grey_font"
             android:textSize="36sp"
             android:transitionName="title_transition"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +63,6 @@
             android:background="@android:color/transparent"
             android:elevation="4dp"
             android:gravity="top|left"
-            android:textColorHighlight="@color/colorAccent"
             android:hint="@string/hint_title"
             android:inputType="textMultiLine|textCapWords"
             android:maxLength="50"
@@ -71,6 +71,7 @@
             android:paddingStart="16dp"
             android:paddingTop="16dp"
             android:textColor="@color/colorPrimaryDark"
+            android:textColorHighlight="@color/colorAccent"
             android:textColorHint="@android:color/darker_gray"
             android:textSize="36sp"
             android:visibility="invisible"
@@ -85,20 +86,21 @@
             android:layout_height="0dp"
             android:gravity="top"
             android:hint="Note"
-            app:met_hideUnderline="true"
-            android:textColorHighlight="@color/colorAccent"
             android:inputType="textMultiLine|textCapSentences"
             android:padding="16dp"
+            android:textColorHighlight="@color/colorAccent"
             app:layout_constraintBottom_toTopOf="@+id/note_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/note_title_hidden"
-            app:met_baseColor="@color/colorPrimaryDark" />
+            app:met_baseColor="@color/colorPrimaryDark"
+            app:met_hideUnderline="true" />
+
 
         <TextView
             android:id="@+id/note_time"
             android:layout_width="0dp"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:background="@color/colorPrimaryDark"
             android:elevation="4dp"
             android:padding="20dp"
@@ -110,6 +112,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout

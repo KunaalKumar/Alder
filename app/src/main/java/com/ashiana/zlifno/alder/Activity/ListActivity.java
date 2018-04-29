@@ -11,11 +11,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -298,9 +301,7 @@ public class ListActivity extends AppCompatActivity {
         speedDialView.setOnActionSelectedListener(speedDialActionItem -> {
             switch (speedDialActionItem.getId()) {
                 case R.id.fab_add:
-                    showSnackBar("Coming soon", R.color.colorAccentDark);
-//                    pickImage();
-
+                    requestPerms();
                     return false; // true to keep the Speed Dial open
                 default:
                     return false;
@@ -308,36 +309,34 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void pickImage() {
+    private void requestPerms() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
 
-        if (Objects.requireNonNull(ListActivity.this).checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            openCamera();
+            // Request permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
         } else {
-            if (Objects.requireNonNull(ListActivity.this).shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                showSnackBar("Camera permission needed for image note", R.color.colorPrimary);
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA);
-            } else {
-                try {
-                    openCamera();
-                } catch (Exception e) {
-
-                }
-            }
+            openCamera();
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CAMERA) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openCamera();
-            } else {
-                showSnackBar("Permission not granted", android.R.color.holo_red_dark);
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted!
+                    openCamera();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    showSnackBar("Can't use camera unless permission is granted", R.color.colorAccentDark);
+                }
+                return;
         }
     }
 
@@ -348,7 +347,7 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        
+
         if (!sharedPreferences.getBoolean(TAG_FINISHED_FINAL_SPOTLIGHT, false)) {
             Spotlight.with(this)
                     .setOverlayColor(ContextCompat.getColor(this, R.color.background)) // background overlay color
@@ -388,6 +387,14 @@ public class ListActivity extends AppCompatActivity {
             } else if (!AddTextNoteActivity.viaBack) {
                 showSnackBar("Title can't be empty", android.R.color.holo_red_light);
                 AddTextNoteActivity.viaBack = false;
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(500);
+                }
             }
         }
 
