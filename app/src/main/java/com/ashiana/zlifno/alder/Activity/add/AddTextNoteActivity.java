@@ -29,14 +29,10 @@ import com.victorminerva.widget.edittext.AutofitEdittext;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.io.Console;
-import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.Objects;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-import me.majiajie.pagerbottomtabstrip.NavigationController;
-import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 
 public class AddTextNoteActivity extends SwipeBackActivity {
 
