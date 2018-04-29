@@ -78,13 +78,3 @@ dependencies {
     // https://github.com/tyzlmjj/PagerBottomTabStrip
     implementation 'me.majiajie:pager-bottom-tab-strip:2.2.5'
 }
-
-
-android {
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
-}

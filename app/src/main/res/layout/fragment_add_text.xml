@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Note"
+                android:text="@string/add_note"
                 android:textColor="@android:color/white"
                 android:textSize="26sp" />
         </android.support.v7.widget.Toolbar>
@@ -37,14 +37,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="4dp"
-            android:focusableInTouchMode="true"
             android:hint="@string/hint_title"
-            android:inputType="textMultiLine|textCapWords"
             android:minHeight="100dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:paddingTop="16dp"
-            android:text="Title"
             android:textColor="@color/colorPrimaryDark"
             android:textColorHint="@color/grey_font"
             android:textSize="36sp"

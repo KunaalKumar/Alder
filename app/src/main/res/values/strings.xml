@@ -8,4 +8,5 @@
     <string name="bold">Bold</string>
     <string name="Italic">Italic</string>
     <string name="underline">Underline</string>
+    <string name="add_note">Add Note</string>
 </resources>
