@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
@@ -32,9 +35,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.Locale;
 import java.util.Objects;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class AddTextNoteActivity extends SwipeBackActivity {
+public class AddTextNoteActivity extends AppCompatActivity {
 
     private TextView titleEditText;
     private AutofitEdittext hiddenTitleEditText;
@@ -231,7 +232,6 @@ public class AddTextNoteActivity extends SwipeBackActivity {
                     saveNoteIntent.putExtra(UPDATE_NOTE_EXTRA, current);
                     setResult(RESULT_OK, saveNoteIntent);
                 }
-
                 finish();
             }
 
@@ -263,8 +263,18 @@ public class AddTextNoteActivity extends SwipeBackActivity {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         Objects.requireNonNull(imm).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+        if(hiddenTitleEditText.hasFocus()) {
+            hiddenTitleEditText.setInputType(InputType.TYPE_NULL);
+        }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            hideKeyboard();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 

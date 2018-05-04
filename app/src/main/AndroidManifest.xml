@@ -13,8 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activity.ListActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.Launcher">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -28,6 +27,8 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
 
         </activity>
+        <activity android:name=".Activity.add.AddImageNoteActivity"
+            android:parentActivityName=".Activity.ListActivity"/>
     </application>
 
 </manifest>
