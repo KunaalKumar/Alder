@@ -10,7 +10,7 @@
     android:clickable="true"
     android:focusable="true"
     android:theme="@style/add_note"
-    tools:context=".Activity.add.AddTextNoteActivity">
+    tools:context=".add.AddTextNoteActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder.Activity;
+package com.ashiana.zlifno.alder.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -32,7 +32,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Activity.add.AddTextNoteActivity;
+import com.ashiana.zlifno.alder.add.AddTextNoteActivity;
 import com.ashiana.zlifno.alder.recycler_view_components.NoteListAdapter;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
@@ -71,8 +71,8 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
 
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_list);
@@ -241,7 +241,6 @@ public class ListActivity extends AppCompatActivity {
                         checkScroll();
 
                         Note noteToDelete = adapter.getNote(viewHolder.getAdapterPosition());
-                        int position = noteToDelete.position;
 
                         listViewModel.deleteNote(noteToDelete);
                         adapter.deleteNote(viewHolder.getAdapterPosition());

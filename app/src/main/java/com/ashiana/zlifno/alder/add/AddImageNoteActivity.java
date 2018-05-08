@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder.Activity.add;
+package com.ashiana.zlifno.alder.add;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

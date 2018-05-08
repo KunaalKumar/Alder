@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.Activity.ListActivity;
+import com.ashiana.zlifno.alder.activity.ListActivity;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

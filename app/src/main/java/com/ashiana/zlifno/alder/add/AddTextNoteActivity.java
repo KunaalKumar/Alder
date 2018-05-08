@@ -1,4 +1,4 @@
-package com.ashiana.zlifno.alder.Activity.add;
+package com.ashiana.zlifno.alder.add;
 
 import android.content.Context;
 import android.content.Intent;
