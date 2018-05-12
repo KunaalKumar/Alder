@@ -36,7 +36,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         Note note = mNotes.get(position);
         if (note != null) {
-            return note.noteType;
+            return note.getNoteType();
         }
         return 0;
     }
@@ -68,7 +68,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Note note = mNotes.get(position);
 
-        switch (note.noteType) {
+        switch (note.getNoteType()) {
             case Note.NOTE_TYPE_TEXT:
                 NoteTextViewHolder hold = (NoteTextViewHolder) holder;
                 bindTextViewHolder(hold, position);
@@ -82,13 +82,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void bindTextViewHolder(NoteTextViewHolder hold, int position) {
         hold.currentItem = mNotes.get(position);
 
-        String title = hold.currentItem.title;
+        String title = hold.currentItem.getTitle();
         if (title.length() > 20) {
             hold.noteTitleView.setSingleLine(false);
         }
 
-        hold.noteTitleView.setText(hold.currentItem.title);
-        hold.noteTimeCreatedView.setText(hold.currentItem.timeCreated);
+        hold.noteTitleView.setText(hold.currentItem.getTitle());
+        hold.noteTimeCreatedView.setText(hold.currentItem.getTimeCreated());
 
         if (mNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = hold.parent.findViewById(R.id.content);

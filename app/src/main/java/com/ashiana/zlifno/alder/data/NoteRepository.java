@@ -65,11 +65,11 @@ public class NoteRepository {
             // 3
             // 4
             Log.v("Alder", "REPO: Started adding note in background");
-            if (asyncTaskNoteDao.getNoteByPos(params[0].position) != null) {
+            if (asyncTaskNoteDao.getNoteByPos(params[0].getPosition()) != null) {
                 Note temp = null;
-                for (int i = params[0].position; i <= lastPos; i++) {
+                for (int i = params[0].getPosition(); i <= lastPos; i++) {
                     Note insert = asyncTaskNoteDao.getNoteByPos(i);
-                    insert.position = i + 1;
+                    insert.setPosition(i + 1);
                     asyncTaskNoteDao.updateNote(insert);
                 }
             }
@@ -97,9 +97,9 @@ public class NoteRepository {
         @Override
         protected Void doInBackground(final Note... params) {
             asyncTaskNoteDao.deleteNote(params[0]);
-            Note next = asyncTaskNoteDao.getNoteByPos(params[0].position + 1);
+            Note next = asyncTaskNoteDao.getNoteByPos(params[0].getPosition() + 1);
             if (next != null) {
-                moveNotePosUp(next.position);
+                moveNotePosUp(next.getPosition());
             }
             return null;
         }
@@ -108,7 +108,7 @@ public class NoteRepository {
             Note current;
             for (int i = firstItemPos; i <= notes.size(); i++) {
                 current = asyncTaskNoteDao.getNoteByPos(i);
-                current.position = i - 1;
+                current.setPosition(i - 1);
                 asyncTaskNoteDao.updateNote(current);
             }
         }
@@ -137,8 +137,8 @@ public class NoteRepository {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            int fromPosition = holdingNote.position;
-            int toPosition = destNote.position;
+            int fromPosition = holdingNote.getPosition();
+            int toPosition = destNote.getPosition();
 
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
@@ -159,8 +159,8 @@ public class NoteRepository {
             Note firstNote = noteDao.getNoteByPos(firstPos);
             Note secondNote = noteDao.getNoteByPos(secondPos);
 
-            firstNote.position = secondPos;
-            secondNote.position = firstPos;
+            firstNote.setPosition(secondPos);
+            secondNote.setPosition(firstPos);
 
             noteDao.updateNote(firstNote);
             noteDao.updateNote(secondNote);

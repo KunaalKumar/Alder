@@ -17,15 +17,6 @@
                             <option name="y" value="22" />
                           </Point>
                         </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_addTextNoteActivity_to_listFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -34,8 +25,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="23" />
-                            <option name="y" value="23" />
+                            <option name="x" value="9" />
+                            <option name="y" value="70" />
                           </Point>
                         </option>
                         <option name="myPositions">

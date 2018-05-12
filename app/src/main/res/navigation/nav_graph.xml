@@ -17,9 +17,5 @@
         android:id="@+id/addTextNoteActivity"
         android:name="com.ashiana.zlifno.alder.add.AddTextNoteActivity"
         android:label="fragment_add_text"
-        tools:layout="@layout/fragment_add_text" >
-        <action
-            android:id="@+id/action_addTextNoteActivity_to_listFragment"
-            app:destination="@id/listFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_add_text" ></fragment>
 </navigation>

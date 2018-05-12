@@ -83,10 +83,10 @@ public class AddTextNoteActivity extends Fragment {
         noteContentEditText = (EditText) rootView.findViewById(R.id.note_content);
 
         if (current != null) {
-            titleEditText.setText(current.title);
+            titleEditText.setText(current.getTitle());
             hiddenTitleEditText.setText(titleEditText.getText());
-            noteContentEditText.setText(current.content);
-            noteTimeTextView.setText(current.timeCreated);
+            noteContentEditText.setText(current.getContent());
+            noteTimeTextView.setText(current.getTimeCreated());
         } else {
             DateTime dateTime = DateTime.now();
             noteTimeTextView.setText(dateTime.toString(usFormat));
@@ -146,8 +146,8 @@ public class AddTextNoteActivity extends Fragment {
                     intent.addNote(toSend);
 
                 } else {
-                    current.title = hiddenTitleEditText.getText().toString();
-                    current.content = noteContentEditText.getText().toString();
+                    current.setTitle(hiddenTitleEditText.getText().toString());
+                    current.setContent(noteContentEditText.getText().toString());
                     saveNoteIntent.putExtra(UPDATE_NOTE_EXTRA, current);
                     intent.saveNote(current);
                 }

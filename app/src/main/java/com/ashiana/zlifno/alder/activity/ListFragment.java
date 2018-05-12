@@ -259,8 +259,8 @@ public class ListFragment extends Fragment {
             } else if (data.hasExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA)) {
                 Note note = (Note) data.getSerializableExtra(AddTextNoteActivity.SAVE_NOTE_EXTRA);
                 isNewNote = note;
-                Log.v("Alder", "Inserting note " + note.title);
-                note.position = listSize + 1;
+                Log.v("Alder", "Inserting note " + note.getTitle());
+                note.setPosition(listSize + 1);
                 listViewModel.insertNote(note);
 
                 recyclerView.smoothScrollToPosition(View.FOCUS_DOWN);

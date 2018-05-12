@@ -21,10 +21,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         JodaTimeAndroid.init(this);
-        Toolbar toolbar = findViewById(R.id.my_toolbar);
-        NavController navController = Navigation.findNavController(findViewById(R.id.my_nav_host_fragment));
-        NavigationView navigationView = findViewById(R.id.navi)
-        NavigationUI.setupActionBarWithNavController(this, navController);
+//        Toolbar toolbar = findViewById(R.id.my_toolbar);
+//        NavController navController = Navigation.findNavController(findViewById(R.id.my_nav_host_fragment));
+//        NavigationUI.setupActionBarWithNavController(this, navController);
     }
 
     @Override
