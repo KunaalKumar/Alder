@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ashiana.zlifno.alder.activity.ListActivity;
+import com.ashiana.zlifno.alder.activity.ListFragment;
 import com.ashiana.zlifno.alder.R;
 import com.ashiana.zlifno.alder.data.Note;
 import com.skyfishjy.library.RippleBackground;
@@ -90,7 +90,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         hold.noteTitleView.setText(hold.currentItem.title);
         hold.noteTimeCreatedView.setText(hold.currentItem.timeCreated);
 
-        if (mNotes.equals(ListActivity.isNewNote)) {
+        if (mNotes.equals(ListFragment.isNewNote)) {
             RippleBackground rippleBackground = hold.parent.findViewById(R.id.content);
             rippleBackground.startRippleAnimation();
             new CountDownTimer(2000, 1000) {
@@ -104,13 +104,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
 
             }.start();
-            ListActivity.isNewNote = null;
+            ListFragment.isNewNote = null;
         }
 
         hold.setItemClickListener((view, position1) -> {
 
             Note current = mNotes.get(position1);
-            ListActivity.updateNote(current, context, hold.noteTitleView, hold.noteTimeCreatedView);
+            ListFragment.updateNote(current, context, hold.noteTitleView, hold.noteTimeCreatedView);
         });
 
     }

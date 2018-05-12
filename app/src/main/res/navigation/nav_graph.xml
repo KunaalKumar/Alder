@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.ashiana.zlifno.alder.activity.ListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_addTextNoteActivity"
+            app:destination="@id/addTextNoteActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTextNoteActivity"
+        android:name="com.ashiana.zlifno.alder.add.AddTextNoteActivity"
+        android:label="fragment_add_text"
+        tools:layout="@layout/fragment_add_text" >
+        <action
+            android:id="@+id/action_addTextNoteActivity_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
+</navigation>
