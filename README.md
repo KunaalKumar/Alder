@@ -1,6 +1,5 @@
-![alt text](https://play.google.com/store/apps/details?id=com.ashiana.zlifno.alder "Alder")
+![alt text](https://github.com/KunaalKumar/Alder/blob/master/app/src/main/res/drawable/alder_icon.png?raw=true "Alder")
 # Alder
-
 
 Android note taking app following material design guidelines
 
