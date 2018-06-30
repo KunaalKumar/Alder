@@ -270,7 +270,7 @@ public class ListActivity extends AppCompatActivity {
 
         speedDialView = findViewById(R.id.speedDial);
         speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.ic_photo_camera_white_24dp)
+                new SpeedDialActionItem.Builder(R.id.fab_add, R.drawable.baseline_photo_camera_white_24dp)
                         .setLabel("Image note")
                         .setFabBackgroundColor(getResources().getColor(R.color.colorAccentLight))
                         .setLabelBackgroundColor(getResources().getColor(R.color.colorAccentLight))
@@ -436,7 +436,7 @@ public class ListActivity extends AppCompatActivity {
 
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 
