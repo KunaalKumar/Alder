@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'idea'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.ashiana.zlifno.alder"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 15
         versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -59,7 +59,7 @@ dependencies {
     // Test helpers for LiveData
     testImplementation 'android.arch.core:core-testing:1.1.1'
     // Test helpers for Room
-    testImplementation 'android.arch.persistence.room:testing:1.1.1'
+    testImplementation 'android.arch.persistence.room:testing:1.0.0'
     // https://github.com/victorminerva/AutoResizeEditText
     implementation 'com.github.victorminerva:AutoResizeEditText:0.1.0'
     // https://github.com/rengwuxian/MaterialEditText
