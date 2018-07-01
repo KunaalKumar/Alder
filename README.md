@@ -20,7 +20,7 @@ Android note taking app following material design guidelines
 * [Lottie](https://github.com/airbnb/lottie-android)
 * [Butterknife](http://jakewharton.github.io/butterknife/)
 * [Ripple Background](https://github.com/skyfishjy/android-ripple-background)
-* ~~~[Awesome Splash](https://github.com/ViksaaSkool/AwesomeSplash)~~~
+* ~~[Awesome Splash](https://github.com/ViksaaSkool/AwesomeSplash)~~
 * [Spotlight](https://github.com/TakuSemba/Spotlight)
 * [Joda-Time](https://github.com/dlew/joda-time-android)
 * [SwipeBackLayout](https://github.com/ikew0ng/SwipeBackLayout)
